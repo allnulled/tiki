@@ -1,6 +1,6 @@
 ![Logo_de_tiki](./docs/tiki.png)
 
-El proyecto «tiki» es mayormente 1 script que sirve para exponer una base de datos MySQL cualquiera, poblada o no, vía PHP estático pero con autentificación y autorización personalizable.
+El proyecto «tiki» es 1 script que sirve para exponer una base de datos MySQL cualquiera, poblada o no, vía PHP estático pero con autentificación y autorización personalizable.
 
 ## Capacidades
 
