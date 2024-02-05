@@ -38,36 +38,36 @@ Primero, si quieres ver un ejemplo completo del uso de todos los servicios antes
 A continuación, describo los campos que se requieren en cada servicio. Hay que tener en cuenta que soporta tanto parámetros GET, POST o POST+JSON. Este último es el más recomendado. Para él, tienes que agregar la cabecera HTTP "Content-Type: application/json" en tus peticiones, y en el cuerpo pasarle directamente un objeto JSON.
 
 - Esquema: devuelve el esquema de la base de datos. No tiene parámetros.
-- Seleccionar: selecciona datos de una tabla de la base de datos.
+- **Seleccionar**: selecciona datos de una tabla de la base de datos.
    - `tabla`: String. Nombre de la tabla que se selecciona.
-- Insertar: inserta un registro en una tabla de la base de datos.
+- **Insertar**: inserta un registro en una tabla de la base de datos.
    - `tabla`: String. Nombre de la tabla en la que se inserta.
    - `valores`: Object. Los campos con los valores que se insertan.
-- Actualizar: actualiza un registro de la base de datos.
+- **Actualizar**: actualiza un registro de la base de datos.
    - `tabla`: String. Nombre de la tabla en la que se actualiza.
    - `id`: Integer. Campo `id` del registro que se actualiza.
    - `valores`: Object. Los campos con los valores que se actualizan.
-- Eliminar: elimina un registro de la base de datos.
+- **Eliminar**: elimina un registro de la base de datos.
    - `tabla`: String. Nombre de la tabla en la que se elimina.
    - `id`: Integer. Campo `id` del registro que se elimina.
-- Registrar usuario: registra un usuario en el sistema.
+- **Registrar usuario:** registra un usuario en el sistema.
    - `nombre`: String. Nombre del nuevo usuario.
    - `email`: String. Correo electrónico del nuevo usuario.
    - `contrasenya`: String. Contraseña del nuevo usuario.
-- Confirmar cuenta: confirma una cuenta de usuario en el sistema.
+- **Confirmar cuenta:** confirma una cuenta de usuario en el sistema.
    - `email`: String. Correo electrónico del usuario.
    - `token_confirmacion`: String. Token para confirmar la cuenta del usuario.
-- Iniciar sesion: inicia una sesión de usuario en el sistema o devuelve las credenciales de la que haya abierta.
+- **Iniciar sesion:** inicia una sesión de usuario en el sistema o devuelve las credenciales de la que haya abierta.
    - `email`: String. Correo electrónico del usuario.
    - `contrasenya`: String. Contraseña del usuario.
-- Cerrar sesion: cierra la sesión de usuario en el sistema.
+- **Cerrar sesion:** cierra la sesión de usuario en el sistema.
    - `token`: String. Token de la sesión abierta del usuario.
-- Olvido credenciales: envía un correo de recuperación de credenciales al email del usuario.
+- **Olvido credenciales:** envía un correo de recuperación de credenciales al email del usuario.
    - `email`: String. Correo electrónico del usuario.
-- Recuperar credenciales: cambia la contraseña mediante un token de recuperación.
+- **Recuperar credenciales:** cambia la contraseña mediante un token de recuperación.
    - `email`: String. Correo electrónico del usuario.
    - `token`: String. Token de recuperación de cuenta del usuario.
-- Baja del sistema: elimina el usuario y sus datos del sistema.
+- **Baja del sistema:** elimina el usuario y sus datos del sistema.
    - `token`: String. Token de la sesión del usuario.
 
 ## Ventajas
