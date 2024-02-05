@@ -5,12 +5,11 @@ try {
     require("configuraciones.php");
 
     global $_TIKI;
-    global $_TIKI_REQUEST;
 
-    $cuerpo = file_get_contents("php://input");
-    $_TIKI_REQUEST = array(
-        "parametros" => array_merge($_GET, $_POST, json_decode(empty($cuerpo) ? "{}" : $cuerpo, true))
-    );
+    function obtener_tiki() {
+        global $_TIKI;
+        return $_TIKI;
+    }
 
     class GestorDeHooks
     {
@@ -38,11 +37,23 @@ try {
 
     class TikiFramework
     {
-        private $gestor_de_hooks = null;
+        public $gestor_de_hooks = null;
+        public $parametros = array();
         function __construct()
         {
             $this->gestor_de_hooks = new GestorDeHooks();
-
+            $cuerpo = file_get_contents("php://input");
+            $this->parametros = array_merge($_GET, $_POST, json_decode(empty($cuerpo) ? "{}" : $cuerpo, true));
+        }
+        function cargar_plugins() {
+            $plugins_activos = scandir("./plugins/activos");
+            foreach($plugins_activos as $plugin_name) {
+                if($plugin_name == "."|| $plugin_name == "..") {
+                    continue;
+                }
+                $plugin_loader_file = "./plugins/activos/{$plugin_name}/load.php";
+                include($plugin_loader_file);
+            }
         }
         function formatear_a_json($data)
         {
@@ -493,15 +504,27 @@ try {
     $tiki = new TikiFramework();
     $_TIKI = $tiki;
 
+    $tiki->cargar_plugins();
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.obtener_parametros:antes");
+
     // Recibir parámetros
-    $token = $_TIKI_REQUEST["parametros"]['token'] ?? '';
-    $operacion = $_TIKI_REQUEST["parametros"]['operacion'] ?? '';
-    $tabla = $_TIKI_REQUEST["parametros"]['tabla'] ?? '';
-    $id = $_TIKI_REQUEST["parametros"]['id'] ?? '';
-    $valores = $_TIKI_REQUEST["parametros"]['valores'] ?? '';
+    $token = $tiki->parametros['token'] ?? '';
+    $operacion = $tiki->parametros['operacion'] ?? '';
+    $tabla = $tiki->parametros['tabla'] ?? '';
+    $id = $tiki->parametros['id'] ?? '';
+    $valores = $tiki->parametros['valores'] ?? '';
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.obtener_parametros:despues");
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autenticar_usuario:antes");
 
     // Autenticar usuario
     $datos_de_sesion = $tiki->autenticar_usuario($token);
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autenticar_usuario:despues");
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.validar_operacion:antes");
 
     // Validar operación
     $operaciones_validas = array(
@@ -535,6 +558,10 @@ try {
         }
     }
 
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.validar_operacion:despues");
+    
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:antes");
+
     // Coger la IP
     $ip = null;
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -549,8 +576,16 @@ try {
     // Persistirlos
     $tiki->loguear_evento("[$ip][$headers]", "log.txt");
 
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:despues");
+    
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autorizar_peticion:antes");
+
     // Autorizar especificamente operación
     $tiki->autorizar_operacion($datos_de_sesion, $operacion, $tabla);
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autorizar_peticion:despues");
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.realizar_accion:antes");
 
     // Ejecutar operación correspondiente
     switch ($operacion) {
@@ -572,30 +607,33 @@ try {
             $tiki->eliminar($tabla, $id);
             break;
         case 'registrar_usuario':
-            $tiki->registrar_usuario($_TIKI_REQUEST["parametros"]["nombre"] ?? '', $_TIKI_REQUEST["parametros"]["email"] ?? '', $_TIKI_REQUEST["parametros"]["contrasenya"] ?? '');
+            $tiki->registrar_usuario($tiki->parametros["nombre"] ?? '', $tiki->parametros["email"] ?? '', $tiki->parametros["contrasenya"] ?? '');
             break;
         case 'confirmar_cuenta':
-            $tiki->confirmar_cuenta($_TIKI_REQUEST["parametros"]["email"] ?? '', $_TIKI_REQUEST["parametros"]["token_confirmacion"] ?? '');
+            $tiki->confirmar_cuenta($tiki->parametros["email"] ?? '', $tiki->parametros["token_confirmacion"] ?? '');
             break;
         case 'iniciar_sesion':
-            $tiki->iniciar_sesion($_TIKI_REQUEST["parametros"]["email"] ?? '', $_TIKI_REQUEST["parametros"]["contrasenya"] ?? '');
+            $tiki->iniciar_sesion($tiki->parametros["email"] ?? '', $tiki->parametros["contrasenya"] ?? '');
             break;
         case 'cerrar_sesion':
-            $tiki->cerrar_sesion($_TIKI_REQUEST["parametros"]["token"] ?? '');
+            $tiki->cerrar_sesion($tiki->parametros["token"] ?? '');
             break;
         case 'olvido_credenciales':
-            $tiki->olvido_credenciales($_TIKI_REQUEST["parametros"]["email"] ?? '');
+            $tiki->olvido_credenciales($tiki->parametros["email"] ?? '');
             break;
         case 'recuperar_credenciales':
-            $tiki->recuperar_credenciales($_TIKI_REQUEST["parametros"]["email"] ?? '', $_TIKI_REQUEST["parametros"]["token"] ?? '', $_TIKI_REQUEST["parametros"]["contrasenya"] ?? '');
+            $tiki->recuperar_credenciales($tiki->parametros["email"] ?? '', $tiki->parametros["token"] ?? '', $tiki->parametros["contrasenya"] ?? '');
             break;
         case 'baja_del_sistema':
             $tiki->baja_del_sistema($datos_de_sesion["id"]);
             break;
         default:
-            $tiki->gestionar_error("Operación no válida.");
+            $tiki->gestionar_error("Operación no válida (2)");
             break;
     }
+
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.realizar_accion:despues");
+
 } catch (Exception $ex) {
     var_dump($ex);
 }?>
