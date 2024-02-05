@@ -35,7 +35,7 @@ Una vez instalado `tiki`, ya puedes empezar a hacer peticiones HTTP a la API RES
 
 Primero, si quieres ver un ejemplo completo del uso de todos los servicios antes listados, puedes ir directamente a [test/test.js](./test/test.js). Ahí tienes un test hecho con `node.js + mocha` que demuestra un  uso correcto de la API.
 
-A continuación, describo los campos que se requieren en cada servicio. Hay que tener en cuenta que soporta tanto parámetros GET, POST o POST+JSON. Este último es el más recomendado. Para él, tienes que agregar la cabecera HTTP "Content-Type: application/json" en tus peticiones.
+A continuación, describo los campos que se requieren en cada servicio. Hay que tener en cuenta que soporta tanto parámetros GET, POST o POST+JSON. Este último es el más recomendado. Para él, tienes que agregar la cabecera HTTP "Content-Type: application/json" en tus peticiones, y en el cuerpo pasarle directamente un objeto JSON.
 
 - Esquema: devuelve el esquema de la base de datos. No tiene parámetros.
 - Seleccionar: selecciona datos de una tabla de la base de datos.
