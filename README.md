@@ -1,4 +1,4 @@
-![Logo_de_tiki](./docs/tiki.png)
+![Logo_de_tiki](./test/tiki.png)
 
 El proyecto «tiki» es 1 script que sirve para exponer una base de datos MySQL cualquiera, poblada o no, vía PHP estático pero con autentificación y autorización personalizable.
 
@@ -17,6 +17,23 @@ Las operaciones que se permiten en el sistema son:
 - Olvido credenciales
 - Recuperar credenciales
 - Baja del sistema
+
+## Instalación
+
+Ahora explicaré por pasos cómo instalar esta herramienta para poder explotarla.
+
+ - **Paso 1.** Descargar el proyecto de [https://github.com/allnulled/tiki](https://github.com/allnulled/tiki).
+ - **Paso 2.** Colocar el proyecto en un servidor para PHP estático, en la carpeta que quieras.
+    - Si no tienes uno, mírate [XAMPP](https://www.apachefriends.org/es/download.html) que es lo más fácil de instalar.
+ - **Paso 3.** Encender el servidor si no lo está ya, e ir a la URL correspondiente del «index.php». 
+    - *Cuidado: puede que si no pones el «index.php» explícito en la URL haga cosas raras, a mí me ha pasado.*
+ - **Paso 4.** Ya está, ya tienes la API funcionando. Puedes ir con tu navegador a la URL del «index.php».
+
+## Uso
+
+Una vez instalado `tiki`, ya puedes empezar a hacer peticiones HTTP a la API REST. Pero no vale hacer las peticiones de cualquier manera, sino que hay un protocolo de entendimiento entre las peticiones y el servidor. Esto es lo que se explica a continuación.
+
+Primero, si quieres ver un ejemplo completo del uso de todos los servicios antes listados, puedes ir directamente a [test/test.js](./test/test.js). Ahí tienes un test hecho con `node.js + mocha` que demuestra un  uso correcto de la API.
 
 ## Ventajas
 
@@ -46,13 +63,15 @@ Las operaciones que se permiten en el sistema son:
 
 Se hizo en unas cuantas horas, asistido por ChatGPT. Se podría decir que piqué un 10% o menos de código que el que tendría que haber picado. Probablemente menos. Y es un código de calidad. Pero sobre todo, pensado. Me ha ahorrado pensar algoritmos, buscar librerías, etc.
 
+Hay un documento en la carpeta de «tests» donde explico bastante paso a paso cómo lo he hecho. Es un Microsoft Word, [«tests/proceso.docx»](./tests/proceso.docx).
+
 ## Tests
 
 Los tests están hechos para node.js + mocha. Se ejecutarían usando `mocha test/test` o `npx mocha test/test`.
 
+Los tests requieren de una base de datos con las tablas de autentificación y autorización mínimas.
+
 ## Logs
 
 Por defecto están activados unos logs que te dejan constancia de la hora y las cabeceras de la petición.
-
-
 
