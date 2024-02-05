@@ -98,7 +98,7 @@ A continuación, describo los campos que se requieren en cada servicio. Hay que 
 
 Se hizo en unas cuantas horas, asistido por ChatGPT. Se podría decir que piqué un 10% o menos de código que el que tendría que haber picado. Probablemente menos. Y es un código de calidad. Pero sobre todo, pensado. Me ha ahorrado pensar algoritmos, buscar librerías, etc.
 
-Hay un documento en la carpeta de «tests» donde explico bastante paso a paso cómo lo he hecho. Es un PDF, [test/Prompts para código. Parte 1.pdf]("./test/Prompts para código. Parte 1.pdf").
+Hay un documento en la carpeta de «tests» donde explico bastante paso a paso cómo lo he hecho. Es un PDF, [test/Prompts para código. Parte 1.pdf](<./test/Prompts para código. Parte 1.pdf>).
 
 ## Tests
 
