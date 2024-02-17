@@ -146,11 +146,9 @@ describe('Tiki tests', function () {
     it('controlador «insertar»', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "insertar",
-        tabla: "usuarios",
+        tabla: "notas",
         valores: {
-          nombre: "noadmin2",
-          email: "noadmin2@noadmin2.com",
-          contrasenya: "noadmin2"
+          contenido: "Nota de ejemplo para el test"
         }
       });
       comprobar_error_de_peticion(response);
@@ -158,20 +156,18 @@ describe('Tiki tests', function () {
     it('controlador «seleccionar» / test 1', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "usuarios"
+        tabla: "notas"
       });
       comprobar_error_de_peticion(response);
-      options.id_usuario =  response.filter(usuario => usuario.nombre === "noadmin2")[0].id;
+      options.id_nota =  response.filter(nota => nota.contenido === "Nota de ejemplo para el test")[0].id;
     });
     it('controlador «actualizar»', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "actualizar",
-        tabla: "usuarios",
-        id: options.id_usuario,
+        tabla: "notas",
+        id: options.id_nota,
         valores: {
-          nombre: "noadmin3",
-          email: "noadmin3@noadmin3.com",
-          contrasenya: "noadmin3"
+          contenido: "Otro contenido de ejemplo para el test"
         }
       });
       comprobar_error_de_peticion(response);
@@ -179,22 +175,22 @@ describe('Tiki tests', function () {
     it('controlador «seleccionar» / test 2', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "usuarios"
+        tabla: "notas"
       });
       comprobar_error_de_peticion(response);
     });
     it('controlador «eliminar»', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "eliminar",
-        tabla: "usuarios",
-        id: options.id_usuario
+        tabla: "notas",
+        id: options.id_nota
       });
       comprobar_error_de_peticion(response);
     });
     it('controlador «seleccionar» / test 3', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "usuarios"
+        tabla: "notas"
       });
       comprobar_error_de_peticion(response);
     });

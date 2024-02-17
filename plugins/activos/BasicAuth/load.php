@@ -4,8 +4,8 @@ $tiki = obtener_tiki();
 
 // Proteger modificación los campos de autentificación sensibles
 $tiki->gestor_de_hooks->agregar("tiki.procedimiento.realizar_accion:antes", function ($datos) use ($tiki) {
-    $operacion = $tiki->parametros["operacion"];
-    $tabla = $tiki->parametros["tabla"];
+    $operacion = $tiki->parametros["operacion"] ?? '';
+    $tabla = $tiki->parametros["tabla"] ?? '';
     $operaciones_protegidas = ["insertar", "actualizar", "eliminar"];
     $tablas_protegidas = ["usuarios", "sesiones"];
     $es_tabla_protegida = in_array($tabla, $tablas_protegidas);

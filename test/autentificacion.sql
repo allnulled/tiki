@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS grupos_y_permisos;
 DROP TABLE IF EXISTS usuarios_y_grupos;
 
 -- Eliminar tablas en orden inverso
+DROP TABLE IF EXISTS notas;
 DROP TABLE IF EXISTS sesiones;
 DROP TABLE IF EXISTS permisos;
 DROP TABLE IF EXISTS grupos;
@@ -57,6 +58,12 @@ CREATE TABLE IF NOT EXISTS sesiones (
     id_usuario INT,
     token VARCHAR(255) NOT NULL UNIQUE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
+-- Crear tabla de 'notas'
+CREATE TABLE IF NOT EXISTS notas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    contenido TEXT
 );
 
 -- Insertar usuario 'administrador'

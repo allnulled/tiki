@@ -1,20 +1,20 @@
 ![Logo_de_tiki](./test/tiki.png)
 
-El proyecto «tiki» es 1 script que sirve para exponer una base de datos MySQL cualquiera, poblada o no, vía PHP estático pero con autentificación y autorización personalizable.
+El proyecto «tiki» es 1 script que sirve para exponer una base de datos MySQL cualquiera vía PHP estático y ofreciendo una capa de autentificación y autorización personalizable.
 
 ## Índice
 
-1. Índice
-2. Capacidades
-3. Instalación
-4. Uso
-5. Ventajas
-6. Desventajas
-7. Elaboración
-8. Tests
-9. Logs
-10. Plugins
-11. Conclusión
+- [Índice](#índice)
+- [Capacidades](#capacidades)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Ventajas](#ventajas)
+- [Desventajas](#desventajas)
+- [Elaboración](#elaboración)
+- [Tests](#tests)
+- [Logs](#logs)
+- [Plugins](#plugins)
+- [Conclusión](#conclusión)
 
 ## Capacidades
 
@@ -26,8 +26,8 @@ Las operaciones que se permiten en el sistema son:
 - Eliminar
 - Registrar usuario
 - Confirmar cuenta
-- Iniciar sesion
-- Cerrar sesion
+- Iniciar sesión
+- Cerrar sesión
 - Olvido credenciales
 - Recuperar credenciales
 - Baja del sistema

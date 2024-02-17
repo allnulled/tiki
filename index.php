@@ -204,7 +204,7 @@ try {
         {
             global $_CONFIGURACIONES;
             $this->loguear_evento("[actor=esquema]", "trace.txt");
-            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.esquema:antes");
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.esquema:antes", $_NODATA);
             $conn = $this->conectar_bd();
             // Consulta para obtener información sobre las tablas y sus columnas
             $query = <<<SQL
@@ -534,9 +534,7 @@ try {
 
     // Autenticar usuario
     $datos_de_sesion = null;
-    if(is_string($token) && strlen($token) === 20) {
-        $datos_de_sesion = $tiki->autenticar_usuario($token);
-    }
+    $datos_de_sesion = $tiki->autenticar_usuario($token);
 
     $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autenticar_usuario:despues", $_NODATA);
 
@@ -574,7 +572,8 @@ try {
             'permisos',
             'usuarios_y_grupos',
             'grupos_y_permisos',
-            'sesiones'
+            'sesiones',
+            'notas'
         );
         if (!in_array($tabla, $tablas_validas)) {
             $tiki->gestionar_error("Tabla no válida.");
