@@ -5,6 +5,8 @@ try {
     require("configuraciones.php");
 
     global $_TIKI;
+    global $_NODATA;
+    $_NODATA = [];
 
     function obtener_tiki() {
         global $_TIKI;
@@ -25,11 +27,12 @@ try {
                 return $a['prioridad'] - $b['prioridad'];
             });
         }
-        public function ejecutar($nombre, $datos = null)
+        public function ejecutar($nombre, &$datos)
         {
             if (isset($this->hooks[$nombre])) {
                 foreach ($this->hooks[$nombre] as $hook) {
-                    call_user_func($hook['callback'], $datos);
+                    $hook_callback = $hook['callback'];
+                    $hook_callback($datos);
                 }
             }
         }
@@ -201,6 +204,7 @@ try {
         {
             global $_CONFIGURACIONES;
             $this->loguear_evento("[actor=esquema]", "trace.txt");
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.esquema:antes");
             $conn = $this->conectar_bd();
             // Consulta para obtener información sobre las tablas y sus columnas
             $query = <<<SQL
@@ -253,34 +257,40 @@ try {
                     $databaseInfo[$table]["foreign_keys"][] = $foreign_key;
                 }
             }
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.esquema:despues", $databaseInfo);
             echo $this->formatear_a_json($databaseInfo);
         }
 
         function seleccionar($tabla)
         {
             $this->loguear_evento("[actor=seleccionar]", "trace.txt");
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.seleccionar:antes", $_NODATA);
             $conn = $this->conectar_bd();
             $query = "SELECT * FROM $tabla";
             $result = $conn->query($query);
             $data = $result->fetch_all(MYSQLI_ASSOC);
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.seleccionar:despues", $data);
             echo $this->formatear_a_json($data);
         }
 
         function insertar($tabla, $valores)
         {
             $this->loguear_evento("[actor=insertar]", "trace.txt");
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.insertar:antes", $_NODATA);
             $conn = $this->conectar_bd();
             $valores_sanitized = array_map(array($conn, 'real_escape_string'), $valores);
             $columnas = implode(',', array_keys($valores_sanitized));
             $valores_str = "'" . implode("','", $valores_sanitized) . "'";
             $query = "INSERT INTO $tabla ($columnas) VALUES ($valores_str)";
             $conn->query($query);
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.insertar:despues", $_NODATA);
             echo $this->formatear_a_json(array("mensaje" => "Registro insertado con éxito."));
         }
 
         function actualizar($tabla, $valores, $id)
         {
             $this->loguear_evento("[actor=actualizar]", "trace.txt");
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.actualizar:antes", $_NODATA);
             $conn = $this->conectar_bd();
             $valores_sanitized = array_map(array($conn, 'real_escape_string'), $valores);
             $set_clause = '';
@@ -290,15 +300,18 @@ try {
             $set_clause = rtrim($set_clause, ',');
             $query = "UPDATE $tabla SET $set_clause WHERE id = $id";
             $conn->query($query);
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.actualizar:despues", $_NODATA);
             echo $this->formatear_a_json(array("mensaje" => "Registro actualizado con éxito."));
         }
 
         function eliminar($tabla, $id)
         {
             $this->loguear_evento("[actor=eliminar]", "trace.txt");
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.eliminar:antes", $_NODATA);
             $conn = $this->conectar_bd();
             $query = "DELETE FROM $tabla WHERE id = $id";
             $conn->query($query);
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.eliminar:despues", $_NODATA);
             echo $this->formatear_a_json(array("mensaje" => "Registro eliminado con éxito."));
         }
 
@@ -506,7 +519,7 @@ try {
 
     $tiki->cargar_plugins();
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.obtener_parametros:antes");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.obtener_parametros:antes", $_NODATA);
 
     // Recibir parámetros
     $token = $tiki->parametros['token'] ?? '';
@@ -515,16 +528,19 @@ try {
     $id = $tiki->parametros['id'] ?? '';
     $valores = $tiki->parametros['valores'] ?? '';
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.obtener_parametros:despues");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.obtener_parametros:despues", $_NODATA);
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autenticar_usuario:antes");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autenticar_usuario:antes", $_NODATA);
 
     // Autenticar usuario
-    $datos_de_sesion = $tiki->autenticar_usuario($token);
+    $datos_de_sesion = null;
+    if(is_string($token) && strlen($token) === 20) {
+        $datos_de_sesion = $tiki->autenticar_usuario($token);
+    }
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autenticar_usuario:despues");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autenticar_usuario:despues", $_NODATA);
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.validar_operacion:antes");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.validar_operacion:antes", $_NODATA);
 
     // Validar operación
     $operaciones_validas = array(
@@ -552,15 +568,22 @@ try {
     }
     if (in_array($operacion, $operaciones_crud)) {
         // Validar tabla
-        $tablas_validas = array('usuarios', 'grupos', 'permisos', 'usuarios_y_grupos', 'grupos_y_permisos');
+        $tablas_validas = array(
+            'usuarios',
+            'grupos',
+            'permisos',
+            'usuarios_y_grupos',
+            'grupos_y_permisos',
+            'sesiones'
+        );
         if (!in_array($tabla, $tablas_validas)) {
             $tiki->gestionar_error("Tabla no válida.");
         }
     }
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.validar_operacion:despues");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.validar_operacion:despues", $_NODATA);
     
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:antes");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:antes", $_NODATA);
 
     // Coger la IP
     $ip = null;
@@ -576,21 +599,21 @@ try {
     // Persistirlos
     $tiki->loguear_evento("[$ip][$headers]", "log.txt");
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:despues");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:despues", $_NODATA);
     
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autorizar_peticion:antes");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autorizar_peticion:antes", $_NODATA);
 
     // Autorizar especificamente operación
     $tiki->autorizar_operacion($datos_de_sesion, $operacion, $tabla);
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autorizar_peticion:despues");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autorizar_peticion:despues", $_NODATA);
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.realizar_accion:antes");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.realizar_accion:antes", $_NODATA);
 
     // Ejecutar operación correspondiente
     switch ($operacion) {
         case 'esquema':
-            $tiki->esquema($tabla);
+            $tiki->esquema();
             break;
         case 'seleccionar':
             $tiki->seleccionar($tabla);
@@ -632,8 +655,8 @@ try {
             break;
     }
 
-    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.realizar_accion:despues");
+    $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.realizar_accion:despues", $_NODATA);
 
 } catch (Exception $ex) {
-    var_dump($ex);
+    echo json_encode([ "error" => $ex->getMessage() ], JSON_UNESCAPED_UNICODE);
 }?>
