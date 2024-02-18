@@ -49,9 +49,6 @@ $_CONFIGURACIONES["database_name"] = "example2";
 
 global $_POLITICA_DE_SEGURIDAD_ESTRICTA;
 $_POLITICA_DE_SEGURIDAD_ESTRICTA = [
-    "safe_tables" => [
-        // None is totally forbidden.
-    ],
     "safe_columns" => [
         // Some columns must be untraceable:
         "usuarios.contrasenya",

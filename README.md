@@ -232,6 +232,10 @@ En el fichero de `configuraciones.php` aparecen las credenciales de la base de d
 
 La cuestión no es que no se pueda subir al servidor. Pero sí hay que estar 100% seguro de que este fichero no se sube a ningún repositorio público, dado que luego estaríamos exponiendo nuestras credenciales de la base de datos, a cualquiera. Podemos ser objeto de Google Hacking, y si somos víctimas de un acceso ilícito a la base de datos, podemos sufrir cualquier alteración de los datos.
 
+**Medida 5. Aplica políticas de seguridad estricta en las tablas o columnas más sensibles.**
+
+En el fichero `configuraciones.php` tienes la variable global `$_POLITICA_DE_SEGURIDAD_ESTRICTA`. Dentro de ella, tienes la propiedad `safe_columns`. Utiliza esta propiedad para prohibir tajantemente el acceso a esas columnas más sensibles de la aplicación que no quieres que ningún usuario acceda o modifique.
+
 ## Conclusión
 
 La herramienta `tiki` se presenta como un driver entre una base de datos MySQL y las operaciones CRUD básicas mediante un sistema basado en PHP estático.

@@ -10,6 +10,7 @@
 [x] Soporte para reglas de ordenación order-by en la consulta de seleccionar
 [x] Soporte para paginación limit-offset en la consulta de seleccionar
 
+[ ] Soporte de safe_columns en insertar y actualizar
 [ ] Sistema de autorización automático
 
 [x] Proteger campos del auth con un plugin básico
