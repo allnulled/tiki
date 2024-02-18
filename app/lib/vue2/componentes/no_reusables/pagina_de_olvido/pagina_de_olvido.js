@@ -24,8 +24,20 @@ return await Sistema_de_modulos.definir_componente_vue2(
       volver() {
         this.$router.history.push("/");
       },
-      enviar_correo_de_recuperacion() {
-        
+      async enviar_correo_de_recuperacion() {
+        try {
+          if(this.email.length === 0) {
+            throw new Error("Debes proporcionar un correo electrónico");
+          }
+          const response = await this.$ajax("POST", "http://127.0.0.1:80/tiki/index.php", {
+            operacion: "olvido_credenciales",
+            email: this.email,
+          });
+          const data = sistema_de_gestion_de_errores.normalizar_respuesta_ajax(response);
+          this.$refs.dialogo_de_recuperacion_de_cuenta_exitoso.showModal();
+        } catch (error) {
+          sistema_de_gestion_de_errores.gestionar_error(error);
+        }
       }
     }
   };

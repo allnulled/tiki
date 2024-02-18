@@ -35,3 +35,6 @@
 
 .background_color_transparent { background-color: transparent; }
 .color_white { color: white; }
+
+.position_relative { position: relative; }
+.position_absolute { position: absolute; }

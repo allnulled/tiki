@@ -236,6 +236,10 @@ La cuestión no es que no se pueda subir al servidor. Pero sí hay que estar 100
 
 En el fichero `configuraciones.php` tienes la variable global `$_POLITICA_DE_SEGURIDAD_ESTRICTA`. Dentro de ella, tienes la propiedad `safe_columns`. Utiliza esta propiedad para prohibir tajantemente el acceso a esas columnas más sensibles de la aplicación que no quieres que ningún usuario acceda o modifique.
 
+Concretamente, lo que permite esta propiedad es que no permitamos el uso de filtros contra esa columna. Y esto sí puede suponer una vulnerabilidad que podrían explotar los usuarios de la API REST. Me explico.
+
+La API REST automáticamente permite filtrar por todas las tablas y campos. Por defecto. Y esto no es interesante para muchas de clas columnas que aparecen en la base de datos. Por ejemplo, el campo de contrasenya del usuario, o sus tokens de recuperación y confirmación, o el token de la sesión. Estos campos no deben estar accesibles para ser filtrados. Es decir, hay una capa de seguridad en el plugin `BasicAuth` que oculta el campo de contrasenya, de los tokens del usuario, y del token de sesión. Pero esto solo está **ocultando** el campo al devolver la información: no está **prohibiendo su uso para filtrar en la API REST**. ¿Qué quiere decir? Que si `usuarios.contrasenya` no estuviera en `$_POLITICA_DE_SEGURIDAD_ESTRICTA["safe_columns"]`, un usuario podría ir a la API REST y probar de encontrar la contraseña de otro usuario, mediante el uso del parámetro `donde` en la operación de `seleccionar`. Y esto no debe poder pasar. Por eso, se lista este campo en `safe_columns`: para que no se pueda filtrar.
+
 ## Conclusión
 
 La herramienta `tiki` se presenta como un driver entre una base de datos MySQL y las operaciones CRUD básicas mediante un sistema basado en PHP estático.

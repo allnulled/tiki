@@ -1,9 +1,17 @@
 .mi-input {
-    background: linear-gradient(180deg,#000066,#163a94 30% 50%,#29297e 50%,#000066) !important;
-    color: rgb(114, 248, 255);
-    padding: 20px !important;
-    font-size: 10px !important;
+    padding: 15px !important;
+    font-size: 11px !important;
+    font-family: 9pt Segoe UI,SegoeUI,Noto Sans,sans-serif !important;
+    border: 1px solid blue !important;
     box-sizing: border-box;
-    border: 1px solid #AAA !important;
-    border-radius: 0pt;
+    background: linear-gradient(180deg,
+    #8C8CFF 0%,
+     #ACACFF 10%,
+     #FCFCFF 50%,
+      #ACACFF 90%,
+      #8C8CFF 100%
+    );
+}
+.mi-input:focus {
+    background: white;
 }

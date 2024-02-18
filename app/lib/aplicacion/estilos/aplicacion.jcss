@@ -45,7 +45,3 @@ dialog::backdrop {
     text-align: center;
     width: 100%;
 }
-
-.mi-title {
-    border-bottom: 1px solid #555;
-}

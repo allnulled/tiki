@@ -1,5 +1,5 @@
 <div>
-    <mi-title class="text_align_center">{{ $t("Página de olvido de contraseña de Tiki") }}</mi-title style="text-align:center;">
+    <mi-title class="text_align_center">{{ $t("Olvido de contraseña de Tiki") }}</mi-title style="text-align:center;">
     <div class="pad_2 text_align_center">
         <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
             <div class="window text_align_left width_100 login_window glass">
@@ -31,4 +31,21 @@
             </div>
         </div>
     </div>
+    <dialog ref="dialogo_de_recuperacion_de_cuenta_exitoso">
+        <div class="window">
+            <div class="title-bar">
+                <div class="title-bar-text">{{ $t("Recuperación de cuenta existoso") }}</div>
+            </div>
+            <div class="window-body pad_2" style="min-height: 200px;">
+                {{ $t("La recuperación de la cuenta se ha iniciado") }}.
+                {{ $t("Se ha enviado un correo electrónico con las instrucciones para que puedas volver a acceder a tu cuenta") }}.
+                {{ $t("Consulta tu correo para recuperar el acceso a la cuenta") }}.
+            </div>
+            <div class="status-bar">
+                <div class="status-bar-field">
+                    <button class="mi-button blanco" v-on:click="() => $refs.dialogo_de_recuperacion_de_cuenta_exitoso.close()">{{ $t("De acuerdo") }}</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
 </div>

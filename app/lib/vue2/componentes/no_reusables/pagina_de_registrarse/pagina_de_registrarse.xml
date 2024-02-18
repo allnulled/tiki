@@ -1,5 +1,5 @@
 <div>
-    <mi-title class="text_align_center">{{ $t("Página de registro de Tiki") }}</mi-title style="text-align:center;">
+    <mi-title class="text_align_center">{{ $t("Registro de Tiki") }}</mi-title style="text-align:center;">
     <div class="pad_2 text_align_center">
         <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
             <div class="window text_align_left width_100 login_window glass">
@@ -35,4 +35,20 @@
             </div>
         </div>
     </div>
+    <dialog ref="dialogo_de_registro_exitoso">
+        <div class="window">
+            <div class="title-bar">
+                <div class="title-bar-text">{{ $t("Registro existoso") }}</div>
+            </div>
+            <div class="window-body pad_2" style="min-height: 200px;">
+                {{ $t("El registro fue llevado a cabo con éxito") }}.
+                {{ $t("Consulta tu correo para confirmar la nueva cuenta") }}.
+            </div>
+            <div class="status-bar">
+                <div class="status-bar-field">
+                    <button class="mi-button blanco" v-on:click="() => $refs.dialogo_de_registro_exitoso.close()">{{ $t("De acuerdo") }}</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
 </div>

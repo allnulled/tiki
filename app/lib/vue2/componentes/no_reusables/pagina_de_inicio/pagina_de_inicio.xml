@@ -1,5 +1,5 @@
 <div>
-    <mi-title class="text_align_center">{{ $t("Página de inicio de Tiki") }}</mi-title style="text-align:center;">
+    <mi-title class="text_align_center">{{ $t("Inicio de Tiki") }}</mi-title style="text-align:center;">
     <div class="pad_2 text_align_center">
         <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
             <div class="window text_align_left width_100 login_window glass">

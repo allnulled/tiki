@@ -22,6 +22,9 @@ Sistema_de_modulos.definir("lib/sistema_de_gestion_de_errores", [], function () 
         throw new Error(response);
       }
       try {
+        if(response_json.error) {
+          throw new Error(response_json.error);
+        }
         return response_json;
       } catch (error) {
         throw error;

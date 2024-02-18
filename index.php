@@ -371,7 +371,6 @@ try {
             $this->loguear_evento($query, "queries.txt");
             $result = $conn->query($query);
             $data = $result->fetch_all(MYSQLI_ASSOC);
-            //*/
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.seleccionar:despues", $data);
             echo $this->formatear_a_json($data);
         }
@@ -386,6 +385,7 @@ try {
             $columnas = implode(',', array_keys($valores_sanitized));
             $valores_str = "'" . implode("','", $valores_sanitized) . "'";
             $query = "INSERT INTO $tabla ($columnas) VALUES ($valores_str)";
+            $this->loguear_evento($query, "queries.txt");
             $conn->query($query);
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.insertar:despues", $_NODATA);
             echo $this->formatear_a_json(array("mensaje" => "Registro insertado con éxito."));
@@ -403,6 +403,7 @@ try {
             }
             $set_clause = rtrim($set_clause, ',');
             $query = "UPDATE $tabla SET $set_clause WHERE id = $id";
+            $this->loguear_evento($query, "queries.txt");
             $conn->query($query);
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.actualizar:despues", $_NODATA);
             echo $this->formatear_a_json(array("mensaje" => "Registro actualizado con éxito."));
@@ -414,6 +415,7 @@ try {
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.eliminar:antes", $_NODATA);
             $conn = $this->conectar_bd();
             $query = "DELETE FROM $tabla WHERE id = $id";
+            $this->loguear_evento($query, "queries.txt");
             $conn->query($query);
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.eliminar:despues", $_NODATA);
             echo $this->formatear_a_json(array("mensaje" => "Registro eliminado con éxito."));
