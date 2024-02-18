@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS notas (
 );
 
 -- Insertar usuario 'administrador'
-INSERT INTO usuarios (nombre, contrasenya, email, confirmado) VALUES ('administrador', 'pordefecto', 'admin@admin.org', 1);
+INSERT INTO usuarios (nombre, contrasenya, email, confirmado) VALUES ('administrador', '$2y$10$gqDpwNjFaeGS2xmzvcDf1OxQHbH9I5nGAoiQafQabutufDZTD6VTG', 'admin@admin.org', 1);
 
 -- Insertar grupo 'administración global'
 INSERT INTO grupos (nombre, descripcion) VALUES ('administración global', 'Grupo de administración global');

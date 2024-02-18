@@ -1,0 +1,56 @@
+.mi-button {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: Calibri;
+    border-radius: 2pt;
+    border: 1px solid blue;
+    color: blue;
+    background-color: white;
+    white-space: nowrap;
+    opacity: 0.8;
+    width: 100%;
+}
+.mi-button:hover {
+    background-color: #AAF !important;
+    opacity: 1;
+}
+
+.mi-button.blanco {
+    /*border: 1px solid #0F0 !important;*/
+    color: #FFF !important;
+}
+.mi-button.verde {
+    /*border: 1px solid #0F0 !important;*/
+    color: #0F0 !important;
+}
+.mi-button.naranja {
+    /*border: 1px solid orange !important;*/
+    color: orange !important;
+}
+.mi-button.rojo {
+    /*border: 1px solid red !important;*/
+    color: red !important;
+}
+button.mi-button.blanco,
+button.mi-button.verde,
+button.mi-button.naranja,
+button.mi-button.rojo {
+    background: linear-gradient(180deg,#565c5f,#212324 30% 50%,#10171a 50%,#000000) !important;
+    transition: background .1s linear;
+}
+button.mi-button.blanco:hover,
+button.mi-button.verde:hover,
+button.mi-button.naranja:hover,
+button.mi-button.rojo:hover,
+button.mi-button.blanco::before,
+button.mi-button.verde::before,
+button.mi-button.naranja::before,
+button.mi-button.rojo::before,
+button.mi-button.blanco::after,
+button.mi-button.verde::after,
+button.mi-button.naranja::after,
+button.mi-button.rojo::after {
+    background: linear-gradient(180deg,#565c5f,#212324 30% 50%,#000000 50%,#000000) !important;
+    transition: background .1s linear;
+}

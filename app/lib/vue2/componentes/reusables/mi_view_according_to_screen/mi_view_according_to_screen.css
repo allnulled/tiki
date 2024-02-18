@@ -1,0 +1,22 @@
+.mi-view-according-to-screen { display: none; }
+
+/* Estilos para móviles (hasta 767px) */
+@media only screen and (max-width: 767px) {
+    .mi-view-according-to-screen.screen-mobile { display: block; }
+}
+
+/* Estilos para tablets (768px - 1023px) */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+    .mi-view-according-to-screen.screen-tablet { display: block; }
+}
+
+/* Estilos para pantallas de PC (1024px - 1919px) */
+@media only screen and (min-width: 1024px) and (max-width: 1919px) {
+    .mi-view-according-to-screen.screen-desktop { display: block; }
+}
+
+/* Estilos para televisores y pantallas grandes (1920px en adelante) */
+@media only screen and (min-width: 1920px) {
+    /* Agrega aquí tus estilos para televisores y pantallas grandes */
+    .mi-view-according-to-screen.screen-television { display: block; }
+}

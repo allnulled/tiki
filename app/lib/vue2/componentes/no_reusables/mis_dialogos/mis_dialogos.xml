@@ -1,0 +1,17 @@
+<div>
+    <dialog id="dialogo_1">
+        <div class="window">
+            <div class="title-bar">
+                <div class="title-bar-text">Hola desde un diálogo</div>
+            </div>
+            <div class="window-body">
+                <button onclick="Sistema_de_dialogos.cerrar('dialogo_1')">Cerrar</button>
+            </div>
+            <div class="status-bar">
+                <div class="status-bar-field">
+                    <div>Es un primer diálogo.</div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+</div>

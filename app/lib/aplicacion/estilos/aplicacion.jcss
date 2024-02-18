@@ -1,0 +1,51 @@
+<%
+
+const vbz = await Sistema_de_modulos.cargar_modulo("lib/aplicacion/estilos/variables");
+const html_background_color = vbz.color_de_fondo_general;
+
+%>
+
+html {
+    background-color: <%-html_background_color%>;
+}
+html,body {
+    padding: 0;
+    margin: 0;
+}
+
+.horizontal_bar {
+    border-top: 1px solid #CCC;
+}
+
+dialog {
+    padding: 0px;
+    border: none;
+}
+
+dialog,
+dialog::backdrop {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.error_window > .title-bar,
+.error_window::before {
+    background: linear-gradient(90deg,#fff6,#0000001a,#fff3),#d56767;
+}
+
+.login_window {
+    margin-top: 40px;
+}
+.login_window > .title-bar,
+.login_window::before {
+    background: linear-gradient(90deg,#1a191966,#0000001a,#0003),#203246
+}
+.login_window > .title-bar > .title-bar-text {
+    color: #99ff90;
+    text-shadow: 0 0 2px yellow;
+    text-align: center;
+    width: 100%;
+}
+
+.mi-title {
+    border-bottom: 1px solid #555;
+}

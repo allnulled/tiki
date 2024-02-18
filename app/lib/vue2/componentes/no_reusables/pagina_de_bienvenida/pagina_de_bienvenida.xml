@@ -1,0 +1,10 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Bienvenido a Tiki") }}</mi-title style="text-align:center;">
+    <div class="pad_2 text_align_center">
+        <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
+            <mi-button class="blanco" :on-click="ir_a_base_de_datos">{{ $t("Ir a base de datos") }}</mi-button>
+            <mi-button class="blanco" :on-click="ir_a_configuraciones">{{ $t("Ir configuraciones") }}</mi-button>
+            <mi-button class="blanco" :on-click="salir_de_aplicacion">{{ $t("Salir de la aplicación") }}</mi-button>
+        </div>
+    </div>
+</div>

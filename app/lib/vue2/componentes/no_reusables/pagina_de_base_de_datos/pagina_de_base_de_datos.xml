@@ -1,0 +1,24 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Base de datos de Tiki") }}</mi-title style="text-align:center;">
+    <div class="pad_2 text_align_center">
+        <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
+            <mi-button class="blanco" :on-click="volver">{{ $t("Volver") }}</mi-button>
+            <div class="horizontal_bar mar_top_2 mar_bottom_2"/>
+            <template v-if="esquema">
+                <div>
+                    <mi-input class="width_100" :initial-value="texto_de_filtro" :on-change="v => texto_de_filtro = v" :placeholder="$t('Filtro de tablas')" />
+                </div>
+                <div v-for="tabla, tabla_index, tabla_counter in esquema" v-bind:key="'' + tabla_index">
+                    <mi-button class="verde" :on-click="() => ir_a_tabla(tabla_index)" v-if="filtrar_tabla(utilidades_de_texto.espaciar_por_delante(tabla_counter + 1, 3, '0'), tabla_index, utilidades_de_texto.humanizar_texto(tabla_index))">
+                    {{ utilidades_de_texto.espaciar_por_delante(tabla_counter + 1, 3, '0') }}. {{ utilidades_de_texto.humanizar_texto(tabla_index) }}
+                    </mi-button>
+                </div>
+            </template>
+            <template v-else="">
+                <mi-loading-bar />
+            </template>
+        </div>
+        <div>
+        </div>
+    </div>
+</div>

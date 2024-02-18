@@ -1,0 +1,21 @@
+<div>
+    <dialog id="error_unico" class="">
+        <div class="window error_window" style="min-width: 250px; ">
+            <div class="title-bar">
+                <div class="title-bar-text">Error</div>
+            </div>
+            <div class="window-body">
+                <div class="pad_2" id="mensaje_de_error_unico"></div>
+                <div class="horizontal_bar"></div>
+                <div class="pad_2">
+                    <button class="mi-button blanco" onclick="Sistema_de_gestion_de_errores.cerrar_error()">Ok</button>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div class="status-bar-field">
+                    <div>Runtime error.</div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+</div>

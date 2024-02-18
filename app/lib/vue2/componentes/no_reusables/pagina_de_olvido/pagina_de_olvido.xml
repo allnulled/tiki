@@ -1,0 +1,34 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Página de olvido de contraseña de Tiki") }}</mi-title style="text-align:center;">
+    <div class="pad_2 text_align_center">
+        <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
+            <div class="window text_align_left width_100 login_window glass">
+                <div class="title-bar">
+                    <div class="title-bar-text">
+                        {{ $t("Olvidó contraseña") }}
+                    </div>
+                </div>
+                <div class="window-body background_color_transparent color_white">
+                    <div class="pad_2">
+                        <mi-label>{{ $t("Correo electrónico de la cuenta:") }}</mi-label>
+                        <mi-input :initial-value="email" :on-change="v => email = v" class="display_block width_100" />
+                    </div>
+                    <div class="horizontal_bar" />
+                    <div class="pad_1">
+                        <div class="display_table width_100">
+                            <div class="display_table_cell width_auto pad_1">
+                                <mi-button class="blanco" :on-click="volver">{{ $t("Volver") }}</mi-button>
+                            </div>
+                            <div class="display_table_cell width_100 pad_1">
+                                <mi-button class="verde" :on-click="enviar_correo_de_recuperacion">{{ $t("Enviar correo de recuperación") }}</mi-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-bar background_color_transparent color_white">
+                    <div class="status-bar-field">{{ $t("Completa el formulario para recuperar el acceso a tu cuenta") }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

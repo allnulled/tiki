@@ -14,6 +14,8 @@ El proyecto «tiki» es 1 script que sirve para exponer una base de datos MySQL 
 - [Tests](#tests)
 - [Logs](#logs)
 - [Plugins](#plugins)
+- [Interfaz](#interfaz)
+- [Seguridad](#seguridad)
 - [Conclusión](#conclusión)
 
 ## Capacidades
@@ -120,7 +122,7 @@ Hay un documento en la carpeta de «tests» donde explico bastante paso a paso c
 
 ## Tests
 
-Los tests están hechos para node.js + mocha. Se ejecutarían usando `mocha test/test` o `npx mocha test/test`.
+Los tests están hechos para node.js + mocha. Se ejecutarían usando `mocha test/test` o `npx mocha test/test`. Requieren de node y mocha instalados y disponibles desde consola.
 
 Los tests requieren de una base de datos con las tablas de autentificación y autorización mínimas.
 
@@ -170,6 +172,51 @@ En el caso del plugin de **BasicAuth**, se utilizan simplemente 2 hooks:
 
 Algunos hooks reciben parámetros y otros no. La mayoría no, pero por ejemplo, el procedimiento de *seleccionar:después* sí que recibe un parámetro, por referencia, para que podamos alterar la salida de datos directamente desde el parámetro del hook.
 
+
+## Interfaz
+
+Para acceder a la interfaz, en lugar de visitar el `index.php`, hay que visitar el `app/index.html`. Aquí se hospeda una aplicación en Vue.js (v2).
+
+Para conocer más cómo se extiende este boilerplate, que se llama [allnulled/start-front-oldschool](https://github.com/allnulled/starter-front-oldschool/), puedes ir a su documentación dentro de este nismo proyecto, en caso de que quieras extender las funcionalidades y documentación base del proyecto. Está en [app/README.md](./app/README.md).
+
+Este boilerplate ofrece varias ventajas de base. Para hacerlo funcionar solo tienes que levantar 2 servidores:
+
+ 1. Para la aplicación estática. Esto es opcional, ya que puedes servirlo desde el PHP estático también.
+ 2. Para el refresco automático. Este servidor es en Node.js. Por lo tanto, requieres de Node.js para levantarlo. Puedes prescindir de él, porque en producción no se usa. Se usa solo en desarrollo. Pero para el desarrollo va muy bien.
+
+Este manual no pretende abarcar las posibilidades de esta aplicación front. Para más información sobre ella, debes dirigirte a la documentación en [app/README.md](./app/README.md).
+
+## Seguridad
+
+Para que `tiki` funcione correctamente y de manera segura, deberías tomar algunas medidas.
+
+**Medida 1. Cambia la contraseña del administrador.**
+
+El administrador, con correo ficticio `admin@admin.org`, tiene una contraseña por defecto, que es `pordefecto`. Si no se cambia, puede suponer una puerta de entrada para cualquier usuario ajeno a la aplicación, por lo cual desemboca en una vulnerabilidad de alto riesgo. El ataque consistiría en loguearse como el usuario administrador, que tiene una clave por defecto, que es `pordefecto`.
+
+**Medida 2. Cambia la variable de entorno de ejecución diferente de `test`.**
+
+En el fichero `configuraciones.php` están definidas algunas variables globales importantes. Una de ellas es `$_CONFIGURACIONES["environment"]`.
+
+Si `$_CONFIGURACIONES["environment"]` equivale a `"test"`, habrá 2 puntos vulnerables en la aplicación.
+
+Un primer punto vulnerable es cuando se hace la `operacion: "registrar_usuario"`. Cuando se registra un usuario, se envía un correo electrónico con un link para activar la cuenta. Pero si está en entorno de `"test"`, también se envía el token de confirmación en la respuesta. Esto no es necesariamente una vulnerabilidad, simplemente puedes dar de alta en el sistema a correos electrónicos a los que no tienes acceso, y puedes entrar usando su correo electrónico para identificarte. Pero en principio, no estarías invadiendo la cuenta de nadie, sino creando una cuenta desde 0, y que funciona con un correo electrónico al que no tienes acceso, simplemente.
+
+Un segundo punto vulnerable es cuando se hace la `operacion: "olvido_credenciales"`. Cuando se olvidan las credenciales, se envía un correo electrónico con un link para acceder a la cuenta mediante el token de recuperación. Una vez dentro, ya puedes cambiar la contraseña más cómodamente. Pero si está en entorno de `"test"`, también se envía el token de recuperación en la respuesta. Esto sí es necesariamente una vulnerabilidad como tal, y muy grave, y permite el acceso de cualquier usuario a cualquier cuenta mediante el token de recuperación de una cuenta activa.
+
+Es por eso que es importantísimo cambiar el valor de esta variable `$_CONFIGURACIONES["environment"]` a cualquier otro valor que no sea `"test"`.
+
+**Medida 3. Cambia las credenciales para la conexión a la base de datos.**
+
+En el fichero de `configuraciones.php` aparecen las credenciales de la base de datos. Por defecto, hay unos valores. Debes adecuarlos a tu entorno, para que se conecte a la base de datos que tú le indiques.
+
+Esto no es una vulnerabilidad, pero es crucial en el funcionamiento de la aplicación.
+
+**Medida 4. Cuidado con compartir el fichero de configuraciones.**
+
+En el fichero de `configuraciones.php` aparecen las credenciales de la base de datos. Estos datos le dan acceso a cualquiera a un sistema completo de datos del cual la aplicación depende plenamente. Son considerados de los datos más sensibles de la aplicación. Pero de alguna tienen que subirse al servidor para funcionar.
+
+La cuestión no es que no se pueda subir al servidor. Pero sí hay que estar 100% seguro de que este fichero no se sube a ningún repositorio público, dado que luego estaríamos exponiendo nuestras credenciales de la base de datos, a cualquiera. Podemos ser objeto de Google Hacking, y si somos víctimas de un acceso ilícito a la base de datos, podemos sufrir cualquier alteración de los datos.
 
 ## Conclusión
 

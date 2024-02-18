@@ -1,0 +1,58 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Página de inicio de Tiki") }}</mi-title style="text-align:center;">
+    <div class="pad_2 text_align_center">
+        <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
+            <div class="window text_align_left width_100 login_window glass">
+                <div class="title-bar">
+                    <div class="title-bar-text">
+                        {{ $t("Identificación") }}
+                    </div>
+                </div>
+                <div class="window-body background_color_transparent color_white">
+                    <div class="pad_2">
+                        <mi-label>{{ $t("Correo electrónico:") }}</mi-label>
+                        <mi-input :initial-value="email" :on-change="v => email = v" class="display_block width_100" />
+                    </div>
+                    <div class="pad_2">
+                        <mi-label>{{ $t("Contraseña:") }}</mi-label>
+                        <mi-input type="password" :initial-value="contrasenya" :on-change="v => contrasenya = v"  class="display_block width_100" />
+                    </div>
+                    <div class="horizontal_bar" />
+                    <mi-view-according-to-screen :screens="['mobile']">
+                        <div class="pad_1">
+                            <div class="width_100">
+                                <div class="width_100 pad_1">
+                                    <mi-button class="verde" :on-click="identificarse">{{ $t("Entrar") }}</mi-button>
+                                </div>
+                                <div class="pad_1">
+                                    <mi-button class="naranja" :on-click="registrarse">{{ $t("Registrarse") }}</mi-button>
+                                </div>
+                                <div class="pad_1">
+                                    <mi-button class="naranja" :on-click="olvido_contrasenya">{{ $t("Olvidó contraseña") }}</mi-button>
+                                </div>
+                            </div>
+                        </div>
+                    </mi-view-according-to-screen>
+                    <mi-view-according-to-screen :screens="['tablet', 'desktop','television']">
+                        <div class="pad_1">
+                            <div class="display_table width_100">
+                                <div class="display_table_cell pad_1">
+                                    <mi-button class="naranja" :on-click="registrarse">{{ $t("Registrarse") }}</mi-button>
+                                </div>
+                                <div class="display_table_cell pad_1">
+                                    <mi-button class="naranja" :on-click="olvido_contrasenya">{{ $t("Olvidó contraseña") }}</mi-button>
+                                </div>
+                                <div class="display_table_cell width_100 pad_1">
+                                    <mi-button class="verde" :on-click="identificarse">{{ $t("Entrar") }}</mi-button>
+                                </div>
+                            </div>
+                        </div>
+                    </mi-view-according-to-screen>
+                </div>
+                <div class="status-bar background_color_transparent color_white">
+                    <div class="status-bar-field">{{ $t("Debes identificarte para entrar en la app") }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

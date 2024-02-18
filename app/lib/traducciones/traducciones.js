@@ -1,0 +1,36 @@
+Sistema_de_modulos.definir("lib/traducciones", [], function() {
+  /*@traducciones::inicio*/
+  return {
+    "es": {
+      "Hola": "Hola",
+      "Bienvenido al starter-front-oldschool": "Bienvenido al starter-front-oldschool",
+      "Construído con la colaboración de": "Construído con la colaboración de"
+    },
+    "en": {
+      "Hola": "Hello",
+      "Bienvenido al starter-front-oldschool": "Welcome to the Starter-Front-Oldschool",
+      "Construído con la colaboración de": "Built with the collaboration of"
+    },
+    "ca": {
+      "Hola": "Hola",
+      "Bienvenido al starter-front-oldschool": "Benvingut a l’entrada-Front-Oldschool",
+      "Construído con la colaboración de": "Construït amb la col·laboració de"
+    },
+    "fr": {
+      "Hola": "Bonjour",
+      "Bienvenido al starter-front-oldschool": "Bienvenue dans le starter-front-oldschool",
+      "Construído con la colaboración de": "Construit avec la collaboration de"
+    },
+    "it": {
+      "Hola": "Ciao",
+      "Bienvenido al starter-front-oldschool": "Benvenuti nella scuola di partenza.",
+      "Construído con la colaboración de": "Costruito con la collaborazione di"
+    },
+    "de": {
+      "Hola": "Hallo",
+      "Bienvenido al starter-front-oldschool": "Willkommen in der Starter-Front-Old-Schule",
+      "Construído con la colaboración de": "Gebaut mit der Zusammenarbeit von"
+    }
+  };
+  /*@traducciones::final*/
+})

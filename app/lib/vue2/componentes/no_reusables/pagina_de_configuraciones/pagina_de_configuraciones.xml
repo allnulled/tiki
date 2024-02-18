@@ -1,0 +1,43 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Configuraciones de Tiki") }}</mi-title style="text-align:center;">
+    <div class="pad_2 text_align_center color_white">
+        <div class="display_inline_block text_align_left width_100" style="max-width: 400px; min-width: 200px; ">
+            <mi-button class="blanco" :on-click="volver">{{ $t("Volver") }}</mi-button>
+            <div class="horizontal_bar mar_top_2 mar_bottom_2"/>
+            <div class="display_table width_100">
+                <div class="display_table_cell width_auto">
+                    {{ $t("Sección:") }}
+                </div>
+                <div class="display_table_cell width_100">
+                    <mi-options class="width_100" :on-change="seleccionar_seccion" initial-value="Idioma">
+                        <mi-option value="Idioma">{{ $t("Idioma") }}</mi-option>
+                        <mi-option value="Ayuda">{{ $t("Ayuda") }}</mi-option>
+                    </mi-options>
+                </div>
+            </div>
+            
+            <div class="" v-if="seccion_seleccionada === 'Idioma'">
+                <div class="horizontal_bar mar_top_2 mar_bottom_2"/>
+                <div class="display_table width_100">
+                    <div class="display_table_cell width_auto">
+                        {{ $t("Idioma:") }}
+                    </div>
+                    <div class="display_table_cell width_100">
+                        <mi-options class="width_100" :on-change="cambiar_idioma" :initial-value="$i18n.locale">
+                            <mi-option :value="idioma" v-for="idioma, idioma_index in idiomas_disponibles" v-bind:key="'idioma-disponible-' + idioma_index">{{ $t(expandir_iso_idioma(idioma)) }}</mi-option>
+                        </mi-options>
+                    </div>
+                </div>
+                <div class="pad_2 text_align_center" style="background-color: rgba(40,200,40,0.8); border-radius: 2pt; border: 1px solid white;margin-top: 8px;">
+                    <span>{{ expandir_iso_idioma($i18n.locale) }} ({{ $i18n.locale }}):</span>
+                    <span>{{ $t("Bienvenido al starter-front-oldschool") }}</span>
+                </div>
+            </div>
+            <div class="" v-else-if="seccion_seleccionada === 'Ayuda'">
+                <div class="horizontal_bar mar_top_2 mar_bottom_2"/>
+                <p>{{ $t("La aplicación de Tiki es muy fácil de usar. Explora todas sus opciones, y rápidamente te harás con ella.") }}</p>
+                <p>{{ $t("Para más información, visita la documentación oficial en ") }}<a href="">https://github.com/allnulled/tiki</a></p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Tabla de base de datos de Tiki") }}</mi-title style="text-align:center;">
+    <div class="pad_2 text_align_center">
+        <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
+            <mi-button class="blanco" :on-click="volver">{{ $t("Volver") }}</mi-button>
+            <div class="horizontal_bar mar_top_2 mar_bottom_2"/>
+            <template v-if="registros">
+                <div v-for="registro, registro_index in registros" v-bind:key="'' + registro_index">
+                    
+                </div>
+            </template>
+            <template v-else="">
+                <mi-loading-bar />
+            </template>
+        </div>
+    </div>
+</div>

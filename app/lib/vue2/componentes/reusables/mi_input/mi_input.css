@@ -1,0 +1,9 @@
+.mi-input {
+    background: linear-gradient(180deg,#000066,#163a94 30% 50%,#29297e 50%,#000066) !important;
+    color: rgb(114, 248, 255);
+    padding: 20px !important;
+    font-size: 10px !important;
+    box-sizing: border-box;
+    border: 1px solid #AAA !important;
+    border-radius: 0pt;
+}

@@ -8,8 +8,12 @@
 [ ] Soporte para filtros where en la consulta
 [ ] Sistema de autorización automático
 
-
 [x] Proteger campos del auth con un plugin básico
   [x] usuarios.email
   [x] usuarios.contrasenya
   [x] sesiones.token
+
+[ ] UI
+  [x] Con auth al principio
+  [ ] Que coja el esquema y lo despliegue como opciones navegables
+  [ ] Que permita cambiar de idioma en configuraciones

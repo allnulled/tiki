@@ -1,0 +1,16 @@
+#app {
+    padding: 2px;
+}
+* {
+    box-sizing: border-box;
+}
+.image_background_layer_1 {
+    /*
+    background-image: url("../../../../recursos/imagenes/fondo_de_mar.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    */
+}
+.image_background_layer_2 {
+    
+}

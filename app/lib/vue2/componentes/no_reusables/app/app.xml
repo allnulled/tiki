@@ -1,0 +1,18 @@
+<div id="app">
+    <mis-dialogos />
+    <mis-errores />
+    <div class="image_background_layer_2" style="min-height: 600px;" v-if="token_de_sesion">
+        <router-view :root="this"></router-view>
+    </div>
+    <div class="image_background_layer_1" style="min-height: 600px;" v-else="">
+        <template v-if="$route.path === '/registrarse'">
+            <pagina-de-registrarse :root="this" />
+        </template>
+        <template v-else-if="$route.path === '/olvido_contrasenya'">
+            <pagina-de-olvido :root="this" />
+        </template>
+        <template v-else="">
+            <pagina-de-inicio :root="this" />
+        </template>
+    </div>
+</div>
