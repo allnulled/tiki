@@ -194,5 +194,42 @@ describe('Tiki tests', function () {
       });
       comprobar_error_de_peticion(response);
     });
+    it('controlador «seleccionar» / test 4', async function () {
+      const datos = [{ contenido: "1"},{ contenido: "2" }, {contenido: "3" }];
+      for(let index=0; index<datos.length; index++) {
+        const dato = datos[index];
+        const response = await peticion("http://127.0.0.1/tiki/index.php", {
+          operacion: "insertar",
+          tabla: "notas",
+          valores: dato
+        });
+        comprobar_error_de_peticion(response);
+      }
+      const response_1 = await peticion("http://127.0.0.1/tiki/index.php", {
+        operacion: "seleccionar",
+        tabla: "notas",
+        donde: [["contenido", "=", "2"]]
+      });
+      comprobar_error_de_peticion(response_1);
+      assert.ok(Array.isArray(response_1));
+      // assert.ok(response_1.length === 1);
+      const response_2 = await peticion("http://127.0.0.1/tiki/index.php", {
+        operacion: "seleccionar",
+        tabla: "notas",
+        pagina: "0"
+      });
+      console.log(response_2);
+      assert.ok(Array.isArray(response_2));
+      const ids = response_2.map(it => it.id);
+      for(let index=0; index<ids.length; index++) {
+        const id = ids[index];
+        const response = await peticion("http://127.0.0.1/tiki/index.php", {
+          operacion: "eliminar",
+          tabla: "notas",
+          id
+        });
+        comprobar_error_de_peticion(response);
+      }
+    });
   });
 });

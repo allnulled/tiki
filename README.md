@@ -60,6 +60,19 @@ Esta es la lista de operaciones:
 - **`esquema`:** devuelve el esquema de la base de datos. No tiene parámetros.
 - **`seleccionar`:** selecciona datos de una tabla de la base de datos.
    - `tabla`: String. Nombre de la tabla que se selecciona.
+   - `donde`: Array&lt;Array&lt;String,String[,String|Array]&gt;&gt;. Opcional. Array de tríos de Strings, donde el tercer String puede omitirse, o aceptar un Array en su lugar. Con este parámetro se pueden ejecutar consultar, y personalizar las reglas de filtro que se quieren aplicar. Se permiten diferentes operaciones de filtrado (por eso el primer Array), que permiten distintas operaciones. La sintaxis a seguir es siempre `[[columna, operador, parametro]]`. Se aceptan los siguientes operadores:
+     - `<`: menor que.
+     - `<=`: menor o igual que.
+     - `>`: menor que.
+     - `>=`: mayor o igual que.
+     - `=`: igual que.
+     - `!=`: diferente de.
+     - `LIKE`: parecido a. Permite el operador `%` para hacer búsquedas de texto por patrones.
+     - `NOT LIKE`: no parecido a. Lo mismo que el anterior, pero negado.
+     - `IS NULL`: es nulo.
+     - `IS NOT NULL`: no es nulo.
+     - `IN`: entre. Este operador acepta como parámetro un Array de valores.
+     - `NOT IN`: entre. Lo mismo que el anterior, pero negado.
 - **`insertar`:** inserta un registro en una tabla de la base de datos.
    - `tabla`: String. Nombre de la tabla en la que se inserta.
    - `valores`: Object. Los campos con los valores que se insertan.
@@ -179,10 +192,11 @@ Para acceder a la interfaz, en lugar de visitar el `index.php`, hay que visitar 
 
 Para conocer más cómo se extiende este boilerplate, que se llama [allnulled/start-front-oldschool](https://github.com/allnulled/starter-front-oldschool/), puedes ir a su documentación dentro de este nismo proyecto, en caso de que quieras extender las funcionalidades y documentación base del proyecto. Está en [app/README.md](./app/README.md).
 
-Este boilerplate ofrece varias ventajas de base. Para hacerlo funcionar solo tienes que levantar 2 servidores:
+Además de todas las ventajas que arrastra del proyecto del que es origen, también ofrece algunas funcionalidades extra que son interesantes.
 
- 1. Para la aplicación estática. Esto es opcional, ya que puedes servirlo desde el PHP estático también.
- 2. Para el refresco automático. Este servidor es en Node.js. Por lo tanto, requieres de Node.js para levantarlo. Puedes prescindir de él, porque en producción no se usa. Se usa solo en desarrollo. Pero para el desarrollo va muy bien.
+Para el refresco automático hay un servidor escrito, en `app/reloader.js`. Este servidor es en node.js. Por lo tanto, requieres de node.js para levantarlo. Puedes prescindir de él, porque en producción no se usa. Se usa solo en desarrollo. Pero para el desarrollo va muy bien. Para usar este servidor, debes ejecutar: `node app/reloader.js`, y automáticamente se encenderá un servidor por el puerto `3000`. Necesitas tener instalados los módulos `node_modules` correspondientes en la carpeta de `app/node_modules`. Para ello debes hacer `npm install` antes, desde la carpeta de `app`.
+
+Además de esto, para escribir tu *payload* en el refresco automático, esto es, un script del lado del cliente que te emplace en el escenario donde puedes testear la *feature* que estás desarrollando concreta. Para escribir esa porción de código, puedes ir a [app/lib/sistema_de_refresco_automatico/sistema_de_refresco_automatico.js](./app/lib/sistema_de_refresco_automatico/sistema_de_refresco_automatico.js), y buscar la función `payload`. Ahí puedes escribir lo que requieras para acelerar tu desarrollo.
 
 Este manual no pretende abarcar las posibilidades de esta aplicación front. Para más información sobre ella, debes dirigirte a la documentación en [app/README.md](./app/README.md).
 

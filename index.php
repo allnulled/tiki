@@ -8,7 +8,8 @@ try {
     global $_NODATA;
     $_NODATA = [];
 
-    function obtener_tiki() {
+    function obtener_tiki()
+    {
         global $_TIKI;
         return $_TIKI;
     }
@@ -48,10 +49,11 @@ try {
             $cuerpo = file_get_contents("php://input");
             $this->parametros = array_merge($_GET, $_POST, json_decode(empty($cuerpo) ? "{}" : $cuerpo, true));
         }
-        function cargar_plugins() {
+        function cargar_plugins()
+        {
             $plugins_activos = scandir("./plugins/activos");
-            foreach($plugins_activos as $plugin_name) {
-                if($plugin_name == "."|| $plugin_name == "..") {
+            foreach ($plugins_activos as $plugin_name) {
+                if ($plugin_name == "." || $plugin_name == "..") {
                     continue;
                 }
                 $plugin_loader_file = "./plugins/activos/{$plugin_name}/load.php";
@@ -200,11 +202,9 @@ try {
             // @TODO
         }
 
-        function esquema()
+        function obtener_esquema()
         {
             global $_CONFIGURACIONES;
-            $this->loguear_evento("[actor=esquema]", "trace.txt");
-            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.esquema:antes", $_NODATA);
             $conn = $this->conectar_bd();
             // Consulta para obtener información sobre las tablas y sus columnas
             $query = <<<SQL
@@ -257,21 +257,125 @@ try {
                     $databaseInfo[$table]["foreign_keys"][] = $foreign_key;
                 }
             }
+            return $databaseInfo;
+        }
+
+        function esquema()
+        {
+            $this->loguear_evento("[actor=esquema]", "trace.txt");
+            $this->gestor_de_hooks->ejecutar("tiki.procedimiento.esquema:antes", $_NODATA);
+            $databaseInfo = $this->obtener_esquema();
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.esquema:despues", $databaseInfo);
             echo $this->formatear_a_json($databaseInfo);
         }
 
-        function seleccionar($tabla)
+        function seleccionar($tabla, $donde = [], $orden = [["id", "ASC"]], $pagina = 1, $items = 20)
         {
+            global $_CONFIGURACIONES;
+            global $_POLITICA_DE_SEGURIDAD_ESTRICTA;
+            $is_safe_column = function($column) use ($_POLITICA_DE_SEGURIDAD_ESTRICTA) {
+                return in_array($column, $_POLITICA_DE_SEGURIDAD_ESTRICTA["safe_columns"]);
+            };
             $this->loguear_evento("[actor=seleccionar]", "trace.txt");
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.seleccionar:antes", $_NODATA);
+            // Normalizar parametros:
+            if(is_string($donde)) {
+                $donde = json_decode($donde, true);
+            }
+            if(is_string($orden)) {
+                $orden = json_decode($orden, true);
+            }
+            if(is_string($pagina)) {
+                $pagina = (int) $pagina;
+            }
+            if(is_string($items)) {
+                $items = (int) $items;
+            }
+            if(!is_array($donde)) {
+                throw new Exception("El parámetro «donde» debe ser un array para poder «seleccionar»");
+            }
+            if(!is_array($orden)) {
+                throw new Exception("El parámetro «orden» debe ser un array para poder «seleccionar»");
+            }
+            if(!is_int($pagina)) {
+                throw new Exception("El parámetro «pagina» debe ser un integer para poder «seleccionar»");
+            }
+            if(!is_int($items)) {
+                throw new Exception("El parámetro «items» debe ser un integer para poder «seleccionar»");
+            }
+            // Seguimos con la query:
             $conn = $this->conectar_bd();
-            $query = "SELECT * FROM $tabla";
+            $tabla = $conn->real_escape_string($tabla);
+            $operadores_validos = ["<",">","<=",">=","=","!=","IS NULL","IS NOT NULL","LIKE","NOT LIKE","IN","NOT IN"];
+            $particula_where = "";
+            if (!empty($donde)) {
+                $clausulasWhere = [];
+                foreach ($donde as $index_filtro => $regla_de_filtro) {
+                    $columna = $regla_de_filtro[0] ?? null;
+                    if($is_safe_column($tabla . "." . $columna)) {
+                        throw new Exception("La columna «{$tabla}.{$columna}» no puede usarse para filtrar");
+                    }
+                    $operador = $regla_de_filtro[1] ?? null;
+                    if(!in_array($operador, $operadores_validos)) {
+                        throw new Exception("Operador no válido en «filtro nº {$index_filtro}»");
+                    }
+                    $valor = $regla_de_filtro[2] ?? null;
+                    $columna = $conn->real_escape_string($columna);
+                    if(in_array($operador, ["IS NULL", "IS NOT NULL"])) {
+                        $clausulasWhere[] = "{$columna} {$operador}";
+                    } else if(in_array($operador, ["IN", "NOT IN"])) {
+                        if(!is_array($valor)) {
+                            throw new Exception("Se requiere de las reglas «donde» con el operador «IN» o «NOT IN» tener un complemento de tipo array");
+                        }
+                        $valores_sanitizados = [];
+                        foreach($valor as $subvalor) {
+                            $valores_sanitizados[] = $conn->real_escape_string($subvalor);
+                        }
+                        $valores_sanitizados = implode(", ", $valores_sanitizados);
+                        $clausulasWhere[] = "{$columna} {$operador} ({$valores_sanitizados})";
+                    } else {
+                        $valor = $conn->real_escape_string($valor);
+                        $clausulasWhere[] = "{$columna} {$operador} '{$valor}'";
+                    }
+                }
+                $particula_where = " WHERE " . implode(" AND ", $clausulasWhere);
+            } else {
+                $particula_where = "";
+            }
+            $particula_order_by = "";
+            if (!empty($orden)) {
+                $clausulasOrder = [];
+                foreach ($orden as $regla_de_orden) {
+                    $columna = $regla_de_orden[0];
+                    if($is_safe_column($tabla . "." . $columna)) {
+                        throw new Exception("La columna «{$tabla}.{$columna}» no puede usarse para ordenar");
+                    }
+                    $columna = $conn->real_escape_string($columna);
+                    $direccion = $regla_de_orden[1];
+                    if ($direccion !== "ASC" && $direccion !== "DESC") {
+                        $direccion = "ASC"; // Por defecto, orden ascendente
+                    }
+                    $direccion = $conn->real_escape_string($direccion);
+                    $clausulasOrder[] = "$columna $direccion";
+                }
+                $particula_order_by = " ORDER BY " . implode(", ", $clausulasOrder);
+            } else {
+                $particula_order_by = "";
+            }
+            $pagina = (int) $pagina;
+            $items = (int) $items;
+            $offset = ($pagina > 0 ? $pagina - 1 : $pagina) * $items;
+            $items = $conn->real_escape_string($items);
+            $offset = $conn->real_escape_string($offset);
+            $query = "SELECT * FROM {$tabla} {$particula_where} {$particula_order_by} LIMIT {$items} OFFSET {$offset}";
+            $this->loguear_evento($query, "queries.txt");
             $result = $conn->query($query);
             $data = $result->fetch_all(MYSQLI_ASSOC);
+            //*/
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.seleccionar:despues", $data);
             echo $this->formatear_a_json($data);
         }
+
 
         function insertar($tabla, $valores)
         {
@@ -581,7 +685,7 @@ try {
     }
 
     $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.validar_operacion:despues", $_NODATA);
-    
+
     $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:antes", $_NODATA);
 
     // Coger la IP
@@ -599,7 +703,7 @@ try {
     $tiki->loguear_evento("[$ip][$headers]", "log.txt");
 
     $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.log_de_peticion:despues", $_NODATA);
-    
+
     $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.autorizar_peticion:antes", $_NODATA);
 
     // Autorizar especificamente operación
@@ -615,7 +719,11 @@ try {
             $tiki->esquema();
             break;
         case 'seleccionar':
-            $tiki->seleccionar($tabla);
+            $donde = $tiki->parametros["donde"] ?? [];
+            $orden = $tiki->parametros["orden"] ?? [];
+            $pagina = $tiki->parametros["pagina"] ?? 1;
+            $items = $tiki->parametros["items"] ?? 20;
+            $tiki->seleccionar($tabla, $donde, $orden, $pagina, $items);
             break;
         case 'insertar':
             $valores_array = is_string($valores) ? json_decode($valores, true) : $valores;
@@ -657,5 +765,5 @@ try {
     $tiki->gestor_de_hooks->ejecutar("tiki.procedimiento.realizar_accion:despues", $_NODATA);
 
 } catch (Exception $ex) {
-    echo json_encode([ "error" => $ex->getMessage() ], JSON_UNESCAPED_UNICODE);
-}?>
+    echo json_encode(["error" => $ex->getMessage()], JSON_UNESCAPED_UNICODE);
+} ?>

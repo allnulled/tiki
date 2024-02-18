@@ -45,3 +45,18 @@ $_CONFIGURACIONES["database_user"] = "root";
 $_CONFIGURACIONES["database_password"] = "";
 $_CONFIGURACIONES["database_name"] = "example2";
 
+// SECCION 6. POLÍTICA DE SEGURIDAD ESTRICTA:
+
+global $_POLITICA_DE_SEGURIDAD_ESTRICTA;
+$_POLITICA_DE_SEGURIDAD_ESTRICTA = [
+    "safe_tables" => [
+        // None is totally forbidden.
+    ],
+    "safe_columns" => [
+        // Some columns must be untraceable:
+        "usuarios.contrasenya",
+        "usuarios.token_de_confirmacion",
+        "usuarios.token_de_recuperacion",
+        "sesiones.token",
+    ]
+];
