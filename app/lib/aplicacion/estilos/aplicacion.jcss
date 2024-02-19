@@ -45,3 +45,6 @@ dialog::backdrop {
     text-align: center;
     width: 100%;
 }
+.status-bar-field {
+    font-size: 10px;
+}

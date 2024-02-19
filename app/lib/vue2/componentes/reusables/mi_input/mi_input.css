@@ -2,16 +2,19 @@
     padding: 15px !important;
     font-size: 11px !important;
     font-family: 9pt Segoe UI,SegoeUI,Noto Sans,sans-serif !important;
-    border: 1px solid blue !important;
+    border: 1px solid #333 !important;
+    border-radius: 0pt !important;
     box-sizing: border-box;
     background: linear-gradient(180deg,
-    #8C8CFF 0%,
-     #ACACFF 10%,
-     #FCFCFF 50%,
-      #ACACFF 90%,
-      #8C8CFF 100%
-    );
+    #FCFCFC 0%,
+     #ACACAC 40%,
+     #ACACAC 60%,
+      #FCFCFC 100%
+    ) !important;
+}
+.mi-input:hover {
+    background: #FCFCFC !important;
 }
 .mi-input:focus {
-    background: white;
+    background: white !important;
 }

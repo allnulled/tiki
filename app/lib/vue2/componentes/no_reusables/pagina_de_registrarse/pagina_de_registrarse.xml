@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="status-bar background_color_transparent color_white">
-                    <div class="status-bar-field">{{ $t("Completa el formulario para registrarte") }}</div>
+                    <div class="status-bar-field text_align_center">{{ $t("Completa el formulario para registrarte") }}</div>
                 </div>
             </div>
         </div>

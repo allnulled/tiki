@@ -50,7 +50,7 @@
                     </mi-view-according-to-screen>
                 </div>
                 <div class="status-bar background_color_transparent color_white">
-                    <div class="status-bar-field">{{ $t("Debes identificarte para entrar en la app") }}</div>
+                    <div class="status-bar-field text_align_center">{{ $t("Debes identificarte para entrar en la app") }}</div>
                 </div>
             </div>
         </div>

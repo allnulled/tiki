@@ -14,15 +14,14 @@
       #3070FF 100%
     );
     border: 1px solid blue;
+    transition: background 0 linear !important;
     text-shadow: 0 0 10px black;
-    transition: background .3s linear;
 }
 .mi-button:hover {
     opacity: 1;
 }
 
 .mi-button.blanco {
-    /*border: 1px solid #0F0 !important;*/
     background: linear-gradient(180deg,
     #8080DF 0%,
      #D0D0DF 25%,
@@ -31,6 +30,11 @@
       #8080DF 100%
     );
 }
+button.mi-button.blanco:hover,
+button.mi-button.blanco::before,
+button.mi-button.blanco::after {
+
+}
 .mi-button.verde {
     background: linear-gradient(180deg,
     #306F30 0%,
@@ -38,6 +42,17 @@
      #60FF60 50%,
       #50DF50 75%,
       #306F30 100%
+    );
+}
+button.mi-button.verde:hover,
+button.mi-button.verde::before,
+button.mi-button.verde::after {
+    background: linear-gradient(180deg,
+    #106F10 0%,
+     #60FF60 25%,
+     #40FF40 50%,
+      #30DF30 75%,
+      #106F10 100%
     );
 }
 .mi-button.naranja {
@@ -49,6 +64,17 @@
       #606F30 100%
     );
 }
+button.mi-button.naranja:hover,
+button.mi-button.naranja::before,
+button.mi-button.naranja::after {
+    background: linear-gradient(180deg,
+    #606F10 0%,
+     #F0FF50 25%,
+     #F0FF40 50%,
+      #F0DF30 75%,
+      #606F10 100%
+    );
+}
 .mi-button.rojo {
     background: linear-gradient(180deg,
     #FF3070 0%,
@@ -58,29 +84,20 @@
       #FF3070 100%
     );
 }
+button.mi-button.rojo:hover,
+button.mi-button.rojo::before,
+button.mi-button.rojo::after {
+    background: linear-gradient(180deg,
+    #FF1050 0%,
+     #FF80C0 25%,
+     #FF60A0 50%,
+      #FF5090 75%,
+      #FF1050 100%
+    );
+    transition: background .1s linear;
+}
 button.mi-button.blanco,
 button.mi-button.verde,
 button.mi-button.rojo {
     
-}
-button.mi-button.blanco:hover,
-button.mi-button.verde:hover,
-button.mi-button.naranja:hover,
-button.mi-button.rojo:hover,
-button.mi-button.blanco::before,
-button.mi-button.verde::before,
-button.mi-button.naranja::before,
-button.mi-button.rojo::before,
-button.mi-button.blanco::after,
-button.mi-button.verde::after,
-button.mi-button.naranja::after,
-button.mi-button.rojo::after {
-    background: linear-gradient(180deg,
-    #AAAAAA 0%,
-     #FFFFFF 25%,
-     #DDDDDD 50%,
-      #BBBBBB 75%,
-      #AAAAAA 100%
-    );
-    transition: background .1s linear;
 }
