@@ -1,0 +1,19 @@
+.mi-breadcrumb {
+    padding: 10px;
+    color: #333;
+    border: 1px solid white;
+    border-radius: 2pt;
+    background: linear-gradient(180deg,#d380dd,#de5cf5 30% 50%,#d32ef0 50%,#eb7aff);
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+.mi-breadcrumb > a {
+    color: #111;
+}
+.link_actual {
+    color: #666;
+    text-decoration: underline;
+}
+.link_actual:hover {
+    cursor: default;
+}

@@ -35,7 +35,6 @@ return await Sistema_de_modulos.definir_componente_vue2(
             token: this.root.token_de_sesion
           }, {});
           const data = sistema_de_gestion_de_errores.normalizar_respuesta_ajax(response);
-          console.log(data);
           this.esquema = data;
         } catch (error) {
           sistema_de_gestion_de_errores.gestionar_error(error);

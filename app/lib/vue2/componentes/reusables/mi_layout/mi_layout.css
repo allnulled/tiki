@@ -1,0 +1,12 @@
+.vertical-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal-layout {
+    display: table;
+    width: 100%;
+}
+.horizontal-layout > * {
+    display: table-cell;
+}

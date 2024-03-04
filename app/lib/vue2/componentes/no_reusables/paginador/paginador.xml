@@ -1,0 +1,19 @@
+<div class="paginador">
+    <mi-layout-horizontal>
+        <div class="boton_de_paginador width_auto">
+            <mi-button class="blanco" :on-click="ir_a_pagina_primera"> «« </mi-button>
+        </div>
+        <div class="boton_de_paginador width_auto">
+            <mi-button class="blanco" :on-click="ir_a_pagina_anterior"> « </mi-button>
+        </div>
+        <div class="width_100 text_align_center">
+            {{ $t("Página") }} {{ parentElement.obtener_pagina_usable() }}
+        </div>
+        <div class="boton_de_paginador width_auto">
+            <mi-button class="blanco" :on-click="ir_a_pagina_siguiente"> » </mi-button>
+        </div>
+        <div class="boton_de_paginador width_auto">
+            <mi-button class="blanco" :on-click="ir_a_pagina_ultima"> »» </mi-button>
+        </div>
+    </mi-layout-horizontal>
+</div>

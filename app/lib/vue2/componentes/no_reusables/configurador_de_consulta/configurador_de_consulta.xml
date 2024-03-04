@@ -1,0 +1,156 @@
+<div class="configurador-de-consulta">
+    <mi-view-according-to-screen :screens="['mobile']">
+        <div class="width_100">
+            <mi-input class="width_100" :initial-value="busqueda" :on-change="sincronizar_busqueda" ref="busqueda_campo_1" />
+        </div>
+        <mi-layout-horizontal>
+            <div class="width_50">
+                <mi-button id="boton_de_configurar_busqueda" class="azul" :on-click="alternar_panel_de_busqueda" :class="{activo:esta_mostrando_panel_de_busqueda}">{{ $t("Configurar") }}</mi-button>
+            </div>
+            <div class="width_50">
+                <mi-button id="boton_de_buscar" class="verde" :on-click="realizar_busqueda" :class="{activo:esta_mostrando_panel_de_busqueda}">{{ $t("Buscar") }}</mi-button>
+            </div>
+        </mi-layout-horizontal>
+    </mi-view-according-to-screen>
+    <mi-view-according-to-screen :screens="['tablet','desktop','television']">
+        <mi-layout-horizontal>
+            <div class="width_100">
+                <mi-input class="width_100" :initial-value="busqueda" :on-change="sincronizar_busqueda" ref="busqueda_campo_2" />
+            </div>
+            <div class="width_auto">
+                <mi-button id="boton_de_configurar_busqueda" class="azul" :on-click="alternar_panel_de_busqueda" :class="{activo:esta_mostrando_panel_de_busqueda}">{{ $t("Configurar") }}</mi-button>
+            </div>
+            <div class="width_auto">
+                <mi-button id="boton_de_buscar" class="verde" :on-click="realizar_busqueda" :class="{activo:esta_mostrando_panel_de_busqueda}">{{ $t("Buscar") }}</mi-button>
+            </div>
+        </mi-layout-horizontal>
+    </mi-view-according-to-screen>
+    <div class="" v-if="esta_mostrando_panel_de_busqueda" style="padding-top: 2px; padding-bttom: 1px;">
+        <mi-tabs class="color_black">
+            <mi-tab :title="$t('Filtros')">
+                <mi-label>{{ $t("Reglas de filtro:") }}</mi-label>
+                <template class="" v-for="filtro, filtro_index in filtros">
+                    <div class="carta_de_filtro" v-bind:key="'filtro-' + filtro_index">
+                        <div class="titulo_de_filtro">
+                            <mi-layout-horizontal>
+                                <div class="titulo_de_filtro_texto width_100">{{ $t("Filtro") }} {{ filtro_index + 1 }}</div>
+                                <div class="">
+                                    <mi-button class="rojo boton_de_quitar_filtro" :on-click="() => quitar_filtro(filtro_index)">
+                                        {{ $t("Quitar") }}
+                                    </mi-button>
+                                </div>
+                            </mi-layout-horizontal>
+                        </div>
+                        <div class="pad_1">
+                            <div>
+                                <mi-label>{{ $t("Columna:") }}</mi-label>
+                                <mi-options class="width_100" :on-change="v => { filtro.columna = v; $forceUpdate(true); }">
+                                    <template v-for="column, column_index in schema[$route.params.tabla].columns.map(c => c.name)">
+                                        <mi-option :value="column" v-bind:key="'filtro-' + filtro_index + '-columna-' + column_index">
+                                            {{ column }}
+                                        </mi-option>
+                                    </template>
+                                </mi-options>
+                            </div>
+                            <div v-if="typeof filtro.columna === 'string'">
+                                <mi-label>{{ $t("Operador:") }}</mi-label>
+                                <mi-options class="width_100" :on-change="v => { filtro.operador = v; $forceUpdate(true); }">
+                                    <template v-for="operator, operator_index in operaciones_disponibles">
+                                        <mi-option :value="operator" v-bind:key="'filtro-' + filtro_index + '-operator-' + operator_index">
+                                            {{ operator }}
+                                        </mi-option>
+                                    </template>
+                                </mi-options>
+                            </div>
+                            <div v-if="['=','!=','<','<=','>','>='].indexOf(filtro.operador) !== -1">
+                                <mi-label>{{ $t("Complemento:") }}</mi-label>
+                                <mi-input class="width_100" :placeholder="$t('Pon el valor a comparar')" :on-change="v => { filtro.complemento = v; $forceUpdate(true); }" />
+                            </div>
+                            <div v-else-if="['LIKE','NOT LIKE'].indexOf(filtro.operador) !== -1">
+                                <mi-label>{{ $t("Complemento:") }}</mi-label>
+                                <mi-input class="width_100" :placeholder="$t('Utiliza % para texto indeterminado')" :on-change="v => { filtro.complemento = v; $forceUpdate(true); }" />
+                            </div>
+                            <div v-else-if="['IS NULL', 'IS NOT NULL'].indexOf(filtro.operador) !== -1">
+                                
+                            </div>
+                            <div v-else-if="['IN', 'NOT IN'].indexOf(filtro.operador) !== -1">
+                                <mi-label>{{ $t("Separador:") }}</mi-label>
+                                <mi-input class="width_100" :placeholder="$t('Indica el separador')" :on-change="v => { filtro.separador = v; $forceUpdate(true); }" />
+                                <mi-label>{{ $t("Lista de valores:") }}</mi-label>
+                                <mi-input class="width_100" :placeholder="$t('Pon los valores')" :on-change="v => { filtro.complemento = v; $forceUpdate(true); }" />
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <div class="pad_top_1">
+                    <mi-button class="blanco boton_de_agregar_filtro" :on-click="agregar_filtro">
+                        {{ $t("Agregar filtro") }}
+                    </mi-button>
+                </div>
+            </mi-tab>
+            <mi-tab :title="$t('Ordenación')">
+                <mi-label>{{ $t("Reglas de ordenación:") }}</mi-label>
+                <template class="" v-for="orden, orden_index in reglas_de_ordenacion">
+                    <div class="carta_de_orden" v-bind:key="'orden-' + orden_index">
+                        <div class="titulo_de_orden">
+                            <mi-layout-horizontal>
+                                <div class="titulo_de_orden_texto width_100">{{ $t("orden") }} {{ orden_index + 1 }}</div>
+                                <div class="">
+                                    <mi-button class="rojo boton_de_quitar_orden" :on-click="() => quitar_orden(orden_index)">
+                                        {{ $t("Quitar") }}
+                                    </mi-button>
+                                </div>
+                            </mi-layout-horizontal>
+                        </div>
+                        <div class="pad_1">
+                            <div>
+                                <mi-label>{{ $t("Columna:") }}</mi-label>
+                                <mi-options class="width_100" :on-change="v => { orden.columna = v; $forceUpdate(true); }">
+                                    <template v-for="column, column_index in schema[$route.params.tabla].columns.map(c => c.name)">
+                                        <mi-option :value="column" v-bind:key="'orden-' + orden_index + '-columna-' + column_index">
+                                            {{ column }}
+                                        </mi-option>
+                                    </template>
+                                </mi-options>
+                            </div>
+                            <div>
+                                <mi-label>{{ $t("Dirección:") }}</mi-label>
+                                <mi-options class="width_100" :on-change="v => { orden.direccion = v; $forceUpdate(true); }">
+                                    <mi-option value="ASC" v-bind:key="'orden-' + orden_index + '-operator-ASC'">
+                                        ASC
+                                    </mi-option>
+                                    <mi-option value="DESC" v-bind:key="'orden-' + orden_index + '-operator-DESC'">
+                                        DESC
+                                    </mi-option>
+                                </mi-options>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <div class="pad_top_1">
+                    <mi-button class="blanco boton_de_agregar_orden" :on-click="agregar_orden">
+                        {{ $t("Agregar orden") }}
+                    </mi-button>
+                </div>
+            </mi-tab>
+            <mi-tab :title="$t('Página')">
+                <mi-layout-horizontal>
+                    <div>
+                        <mi-label>{{ $t("Página:") }}</mi-label>
+                        <mi-input class="width_100" :initial-value="''+pagina" :on-change="v => pagina = v" />
+                    </div>
+                    <div class="pad_left_1">
+                        <mi-label>{{ $t("Ítems por página:") }}</mi-label>
+                        <mi-input class="width_100" :initial-value="''+items_por_pagina" :on-change="v => items_por_pagina = v"  />
+                    </div>
+                </mi-layout-horizontal>
+            </mi-tab>
+            <mi-tab :title="$t('Búsqueda')">
+                <div>
+                    <mi-label>{{ $t("Búsqueda de texto:") }}</mi-label>
+                    <mi-input class="width_100" :initial-value="busqueda" :on-change="sincronizar_busqueda" ref="busqueda_campo_3" />
+                </div>
+            </mi-tab>
+        </mi-tabs>
+    </div>
+</div>

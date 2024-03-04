@@ -1,0 +1,28 @@
+.carta_de_orden,
+.carta_de_filtro {
+    display: inline-block;
+    max-width: 180px;
+    margin-right: 4px;
+    margin-top: 4px;
+    border: 1px solid #333;
+}
+.titulo_de_orden,
+.titulo_de_filtro {
+    background-color: #333;
+    color: white;
+    text-transform: uppercase;
+    font-size: 9px;
+    padding: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* Estilos para móviles (hasta 767px) */
+@media only screen and (max-width: 767px) {
+    .carta_de_orden,
+    .carta_de_filtro {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+    }
+}

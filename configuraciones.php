@@ -45,15 +45,57 @@ $_CONFIGURACIONES["database_user"] = "root";
 $_CONFIGURACIONES["database_password"] = "";
 $_CONFIGURACIONES["database_name"] = "example2";
 
-// SECCION 6. POLÍTICA DE SEGURIDAD ESTRICTA:
+// SECCION 6. METAESQUEMA: ATRIBUTOS DEL ESQUEMA DE DATOS
 
-global $_POLITICA_DE_SEGURIDAD_ESTRICTA;
-$_POLITICA_DE_SEGURIDAD_ESTRICTA = [
-    "safe_columns" => [
-        // Some columns must be untraceable:
-        "usuarios.contrasenya",
-        "usuarios.token_de_confirmacion",
-        "usuarios.token_de_recuperacion",
-        "sesiones.token",
+global $_METAESQUEMA;
+$_METAESQUEMA = [
+    "usuario.email" => [
+        "is_identity" => true,
+        "is_form_type" => "email"
+    ],
+    "usuario.contrasenya" => [
+        "is_form_type" => "contraseña",
+        "is_private_column" => true
+    ],
+    "usuario.token_confirmacion" => [
+        "is_form_type" => "contraseña",
+        "is_private_column" => true
+    ],
+    "usuario.token_recuperacion" => [
+        "is_form_type" => "contraseña",
+        "is_private_column" => true
+    ],
+    "grupo.nombre" => [
+        "is_identity" => true
+    ],
+    "permiso.nombre" => [
+        "is_identity" => true
+    ],
+    "sesion.token" => [
+        "is_form_type" => "contraseña",
+        "is_private_column" => true
+    ],
+    "nota.fecha_de_expiracion"=> [
+        "is_form_type" => "fecha"
+    ],
+    "nota.esta_destacado" => [
+        "is_form_type" => "booleano combobox",
+        "has_options" => ["Normal", "Destacado"]
+    ],
+    "nota.prioridad" => [
+        "is_form_type" => "booleano checkbox",
+        "has_options" => ["¡Prioritario!", "¿Prioritario?"]
+    ],
+    "nota.clasificacion" => [
+        "is_form_type" => "opción selector",
+        "has_options" => ["Observación", "Comentario constructivo", "Crítica", "Mensaje público", "Mensaje al administrador"]
+    ],
+    "nota.modo" => [
+        "is_form_type" => "opción combobox",
+        "has_options" => ["A tiempo", "Puede posponerse", "Urgente"]
+    ],
+    "nota.tags_principales" => [
+        "is_form_type" => "opciones checkbox",
+        "has_options" => ["Sobre la plataforma", "Sobre alguna conducta", "Sobre la organización"]
     ]
 ];

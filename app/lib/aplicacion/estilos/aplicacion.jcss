@@ -5,8 +5,10 @@ const html_background_color = vbz.color_de_fondo_general;
 
 %>
 
-html {
+html,body {
     background-color: <%-html_background_color%>;
+    background-color: #0a4a65;
+    color: white;
 }
 html,body {
     padding: 0;

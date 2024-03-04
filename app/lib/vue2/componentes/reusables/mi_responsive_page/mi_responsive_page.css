@@ -1,0 +1,26 @@
+.mi-responsive-page {
+    padding: 8px;
+}
+.mi-responsive-page-container {
+    padding-top: 5px;
+}
+.mi-responsive-page-container {
+    text-align: left;
+}
+
+/* Estilos para móviles (hasta 767px) */
+@media only screen and (max-width: 767px) {
+    .mi-responsive-page {
+        text-align: center;
+    }
+    .mi-responsive-page-container {
+        display: inline-block;
+        max-width: 560px;
+        width: 100%;
+    }
+}
+
+article[role="tabpanel"] {
+    padding: 4px;
+    margin-bottom: 0px;
+}

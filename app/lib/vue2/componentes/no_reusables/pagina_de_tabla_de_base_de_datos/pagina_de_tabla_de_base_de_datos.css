@@ -1,0 +1,32 @@
+.visor_de_tabla {
+    overflow: scroll;
+    border: 1px solid #CCC;
+    border-radius: 4pt;
+    color: black;
+}
+.tabla_de_base_de_datos {
+    width: 100%;
+    background-color: white;
+    border-collapse: collapse;
+}
+
+.tabla_de_base_de_datos > thead > tr > th {
+    background-color: #222;
+    color: white;
+    padding: 8px;
+    border-left: 1px solid #CCC;
+}
+
+.tabla_de_base_de_datos > thead > tr > th:first-child {
+    border-left: none;
+}
+
+.tabla_de_base_de_datos > tbody > tr > td {
+    padding: 4px;
+    border-left: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+}
+
+.tabla_de_base_de_datos > tbody > tr > td:first-child {
+    border-left: none;
+}

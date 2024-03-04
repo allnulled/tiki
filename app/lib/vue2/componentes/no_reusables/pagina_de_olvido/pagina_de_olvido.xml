@@ -20,7 +20,7 @@
                                 <mi-button class="blanco" :on-click="volver">{{ $t("Volver") }}</mi-button>
                             </div>
                             <div class="display_table_cell width_100 pad_1">
-                                <mi-button class="verde" :on-click="enviar_correo_de_recuperacion">{{ $t("Enviar correo de recuperación") }}</mi-button>
+                                <mi-button class="verde" :on-click="enviar_correo_de_recuperacion">{{ $t("Enviar correo") }}</mi-button>
                             </div>
                         </div>
                     </div>

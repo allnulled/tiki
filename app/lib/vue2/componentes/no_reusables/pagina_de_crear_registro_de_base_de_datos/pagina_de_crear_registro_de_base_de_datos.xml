@@ -1,0 +1,23 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Registro") }} nuevo de: {{ $route.params.tabla }}</mi-title style="text-align:center;">
+    <mi-responsive-page>
+        <mi-breadcrumb2 class="text_align_left" :on-click-return="volver">
+            <router-link to="/">{{ $t("Inicio") }}</router-link>
+            <span> » </span>
+            <router-link to="/base_de_datos">{{ $t("Base de datos") }}</router-link>
+            <span> » </span>
+            <router-link :to="'/base_de_datos/tabla/' + $route.params.tabla">{{ $t("Tabla") }} {{ $route.params.tabla }}</router-link>
+            <span> » </span>
+            <a class="link_actual" href="javascript:void(0)">{{ $t("Nuevo registro") }}</a>
+        </mi-breadcrumb2>
+        <formulario-de-tabla :root="root" :schema="root.esquema" :table="$route.params.tabla" ref="formulario_de_tabla" />
+        <div class="text_align_right">
+            <mi-view-according-to-screen :screens="['mobile']">
+                <mi-button class="width_100 verde" :on-click="crear_instancia">{{ $t("Crear") }}</mi-button>
+            </mi-view-according-to-screen>
+            <mi-view-according-to-screen :screens="['tablet','desktop','television']">
+                <mi-button class="width_auto verde" :on-click="crear_instancia">{{ $t("Crear") }}</mi-button>
+            </mi-view-according-to-screen>
+        </div>
+    </mi-responsive-page>
+</div>

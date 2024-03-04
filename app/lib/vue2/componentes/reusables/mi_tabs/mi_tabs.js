@@ -2,9 +2,9 @@
 Vue.component('mi-tab', {
   props: ['title'],
   template: `
-    <div v-show="active">
+    <article class="mi-tab" role="tabpanel" v-show="active">
       <slot></slot>
-    </div>
+    </article>
   `,
   data: function() {
     return {
@@ -18,6 +18,7 @@ Vue.component('mi-tab', {
 
 // Definir el componente Vue para los tabs
 Vue.component('mi-tabs', {
+  props: {},
   data: function() {
     return {
       activeTabIndex: 0,
@@ -38,15 +39,13 @@ Vue.component('mi-tabs', {
     }
   },
   template: `
-    <div>
-      <div>
-        <button v-for="(tab, index) in tabs" :key="index" @click="activateTab(index)">
+    <div class="mi-tabs">
+      <menu role="tablist">
+        <button class="" role="tab" v-for="(tab, index) in tabs" :key="index" @click="activateTab(index)" :aria-selected="tab.active">
           {{ tab.title }}
         </button>
-      </div>
-      <div>
-        <slot></slot>
-      </div>
+      </menu>
+      <slot></slot>
     </div>
   `
 });

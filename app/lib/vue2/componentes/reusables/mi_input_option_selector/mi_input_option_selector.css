@@ -1,0 +1,19 @@
+.mi-input-option-selector {
+
+}
+.panel_de_opciones_de_selector {
+    width: 100%;
+}
+.panel_de_opcion_de_selector {
+    width: 100%;
+    padding: 8px;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+.panel_de_opcion_de_selector:hover {
+    background-color: #CCC;
+}
+.panel_de_opcion_de_selector.activo {
+    background-color: #AAA;
+}

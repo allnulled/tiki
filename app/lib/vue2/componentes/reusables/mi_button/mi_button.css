@@ -4,7 +4,6 @@
     font-size: 11px;
     font-family: 9pt Segoe UI,SegoeUI,Noto Sans,sans-serif !important;
     white-space: nowrap;
-    opacity: 0.8;
     width: 100%;
     background: linear-gradient(180deg,
     #3070FF 0%,
@@ -15,6 +14,7 @@
     );
     border: 1px solid blue;
     transition: background 0 linear !important;
+    opacity: 1;
     text-shadow: 0 0 10px black;
 }
 .mi-button:hover {
@@ -30,10 +30,39 @@
       #8080DF 100%
     );
 }
+button.mi-button.blanco.activo,
 button.mi-button.blanco:hover,
 button.mi-button.blanco::before,
 button.mi-button.blanco::after {
-
+    background: linear-gradient(180deg,
+    #A0A0DF 0%,
+     #E0E0EF 25%,
+     #FFFFFF 50%,
+      #E0E0EF 75%,
+      #A0A0DF 100%
+    );
+}
+.mi-button.azul {
+    background: linear-gradient(180deg,
+    #6060AF 0%,
+     #A0A0FF 25%,
+     #D0D0FF 50%,
+      #A0A0FF 75%,
+      #6060FF 100%
+    );
+    transition: background 0 linear, opacity 0 linear;
+}
+button.mi-button.azul.activo,
+button.mi-button.azul:hover,
+button.mi-button.azul::before,
+button.mi-button.azul::after {
+    background: linear-gradient(180deg,
+    #3060AF 0%,
+     #C0C0FF 25%,
+     #E0E0FF 50%,
+      #C0C0FF 75%,
+      #3060FF 100%
+    );
 }
 .mi-button.verde {
     background: linear-gradient(180deg,
@@ -44,6 +73,7 @@ button.mi-button.blanco::after {
       #306F30 100%
     );
 }
+button.mi-button.verde.activo,
 button.mi-button.verde:hover,
 button.mi-button.verde::before,
 button.mi-button.verde::after {
@@ -64,6 +94,7 @@ button.mi-button.verde::after {
       #606F30 100%
     );
 }
+button.mi-button.naranja.activo,
 button.mi-button.naranja:hover,
 button.mi-button.naranja::before,
 button.mi-button.naranja::after {
@@ -84,6 +115,7 @@ button.mi-button.naranja::after {
       #FF3070 100%
     );
 }
+button.mi-button.rojo.activo,
 button.mi-button.rojo:hover,
 button.mi-button.rojo::before,
 button.mi-button.rojo::after {
@@ -96,8 +128,8 @@ button.mi-button.rojo::after {
     );
     transition: background .1s linear;
 }
-button.mi-button.blanco,
-button.mi-button.verde,
-button.mi-button.rojo {
-    
+
+button.mi-button.mini {
+    padding: 2px;
+    font-size: 9px;
 }

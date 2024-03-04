@@ -1,0 +1,11 @@
+<div class="mi-input-reference">
+    <div class="display_table width_100">
+        <div class="display_table_cell width_100">
+            <input class="mi-input width_100" type="text" v-model="inputReference" disabled="true" />
+        </div>
+        <div class="display_table_cell">
+            <mi-button class="blanco" :on-click="alternar_selector">{{ $t(esta_mostrando_selector ? "Ocultar" : "Seleccionar") }}</mi-button>
+        </div>
+    </div>
+    <explorador-de-tabla ref="explorador_de_tabla" :root="root" :schema="root.esquema" v-show="esta_mostrando_selector" mode="seleccionar-uno" :table="table" :on-change="(v, c) => inputReference = c.inputReference" />
+</div>

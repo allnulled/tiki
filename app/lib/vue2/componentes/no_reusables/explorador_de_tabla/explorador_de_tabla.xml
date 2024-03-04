@@ -1,0 +1,67 @@
+<div class="configurador-de-consulta">
+    <configurador-de-consulta ref="configurador_de_consulta" :root="root" :schema="root.esquema" :parent-component="this" />
+    <template v-if="esta_cargando_registros">
+        <mi-loading-bar />
+    </template>
+    <template v-else-if="registros">
+        <div style="height:8px;"></div>
+        <paginador class="" style="padding-bottom:1px;" :parent-element="this" />
+        <div class="visor_de_tabla">
+            <table class="tabla_de_base_de_datos" style="max-height: 300px;">
+                <template v-if="registros && registros.length">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th v-for="propiedad, propiedad_index in propiedades_de_registro" v-bind:key="'cabeceras-propiedad-' + propiedad_index">
+                            {{ propiedad }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="registro, registro_index in registros" v-bind:key="'registro-' + registro_index">
+                        <tr>
+                            <td class="width_1">
+                                <template v-if="mode === 'seleccionar-uno'">
+                                    <mi-button class="verde width_1" :on-click="() => seleccionar_registro(registro)">{{ $t("Seleccionar") }}</mi-button>
+                                </template>
+                                <template v-else-if="mode === 'solo-ver'">
+                                    <mi-button class="verde width_1" :on-click="() => ir_a_actualizar_registro(registro.id)">{{ $t("Editar") }}</mi-button>
+                                </template>
+                            </td>
+                            <td class="width_1">
+                                <mi-button class="blanco width_1" :on-click="() => alternar_exploracion_de_registro(registro.id)">{{ $t("Explorar") }}</mi-button>
+                            </td>
+                            <td v-for="propiedad, propiedad_index in propiedades_de_registro" v-bind:key="'registro-' + registro_index + '-propiedad-' + propiedad_index">
+                            {{ registro[propiedad] }}
+                            </td>
+                        </tr>
+                        <tr v-if="esta_explorando_registros.indexOf(registro.id) !== -1">
+                            <td colspan="1000">
+                                <div v-for="propiedad, propiedad_index in propiedades_de_registro" v-bind:key="'registro-' + registro_index + '-propiedad-' + propiedad_index + '-detalle'">
+                                    <b>{{ propiedad }}:</b> <span>{{ registro[propiedad] }}</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+                <template v-else="">
+                    <tbody>
+                        <tr>
+                            <td colspan="1000">
+                                {{ $t("No se encontraron registros para esta consulta.") }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </table>
+        </div>
+        <paginador class="" style="padding-top:1px;" :parent-element="this" />
+        <div style="height:8px;"></div>
+        <div class="text_align_right">
+            <mi-button class="verde" style="max-width: 160px;" :on-click="ir_a_crear_registro" id="boton_de_ir_a_crear_instancia">{{ $t("Ir a crear instancia") }}</mi-button>
+        </div>
+    </template>
+    <template v-else="">
+        <mi-loading-bar />
+    </template>
+</div>

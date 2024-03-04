@@ -2,7 +2,7 @@
 Vue.component('mi-option', {
   props: ['value'],
   template: `
-    <option v-bind:value="value"><slot></slot></option>
+    <option class="mi-option" v-bind:value="value"><slot></slot></option>
   `
 });
 
@@ -30,7 +30,7 @@ Vue.component('mi-options', {
     }
   },
   template: `
-    <select v-model="selectedOption" @change="handleSelect">
+    <select class="mi-options" v-model="selectedOption" @change="handleSelect">
       <slot></slot>
     </select>
   `

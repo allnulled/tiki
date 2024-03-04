@@ -8,11 +8,14 @@ return await Sistema_de_modulos.definir_componente_vue2(
     templateUrl: "lib/vue2/componentes/no_reusables/app/app.xml",
     data() {
       return {
-        token_de_sesion: undefined
+        token_de_sesion: undefined,
+        esquema: undefined
       }
     },
     mounted: function () {
-      console.log("Aplicación iniciada correctamente.");
+      Sistema_de_modulos.definir("AppRoot", [], () => {
+        return this;
+      });
     }
   };
 });

@@ -5,18 +5,10 @@ Vue.component('mi-button', {
       type: String,
       default: "1px solid blue"
     },
-    color: {
-      type: String,
-      default: "blue"
-    },
-    backgroundColor: {
-      type: String,
-      default: "white",
-    },
     onClick: {
       type: Function,
       default: function() {}
     }
   },
-  template: '<button class="mi-button" :style="{ border, color, backgroundColor }" @click="onClick"><slot /></button>',
+  template: '<button class="mi-button" :style="{ border }" @click="onClick"><slot /></button>',
 });

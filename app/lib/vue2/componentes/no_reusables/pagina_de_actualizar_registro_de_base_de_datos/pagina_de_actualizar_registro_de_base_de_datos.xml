@@ -1,0 +1,47 @@
+<div>
+    <mi-title class="text_align_center">{{ $t("Registro") }} nº {{ $route.params.registro }} de: {{ $route.params.tabla }}</mi-title style="text-align:center;">
+    <mi-responsive-page>
+        <mi-breadcrumb2 class="text_align_left" :on-click-return="volver">
+            <router-link to="/">{{ $t("Inicio") }}</router-link>
+            <span> » </span>
+            <router-link to="/base_de_datos">{{ $t("Base de datos") }}</router-link>
+            <span> » </span>
+            <router-link :to="'/base_de_datos/tabla/' + $route.params.tabla">{{ $t("Tabla") }} {{ $route.params.tabla }}</router-link>
+            <span> » </span>
+            <a class="link_actual" href="javascript:void(0)">{{ $t("Editar registro") }}</a>
+        </mi-breadcrumb2>
+        <div v-if="(!dato) || esta_cargando_instancia">
+            <mi-loading-bar />
+        </div>
+        <div v-else="">
+            <formulario-de-tabla :root="root" :schema="root.esquema" :table="$route.params.tabla" ref="formulario_de_tabla" :initial-value="dato" />
+        </div>
+        <div class="text_align_right">
+            <mi-view-according-to-screen :screens="['mobile']">
+                <mi-button class="width_100 verde" :on-click="actualizar_instancia">{{ $t("Guardar") }}</mi-button>
+                <mi-button class="width_100 rojo" :on-click="abrir_dialogo_de_eliminar_instancia">{{ $t("Eliminar registro") }}</mi-button>
+            </mi-view-according-to-screen>
+            <mi-view-according-to-screen :screens="['tablet','desktop','television']">
+                <mi-button class="width_auto rojo" :on-click="abrir_dialogo_de_eliminar_instancia">{{ $t("Eliminar registro") }}</mi-button>
+                <mi-button class="width_auto verde" :on-click="actualizar_instancia">{{ $t("Guardar") }}</mi-button>
+            </mi-view-according-to-screen>
+        </div>
+        <dialog id="dialogo_confirmar_eliminar_registro">
+            <mi-window class="error_window" :title="$t('Confirmar eliminar registro')" :footer="$t('Confirma si quieres eliminar el registro para siempre')">
+                <div style="min-height: 80px;">
+                    <div class="pad_1">{{ $t("¿Estás seguro de que quieres eliminar este registro?") }}</div>
+                    <div class="pad_1">{{ $t("La acción no podrá ser rectificada posteriormente.") }}</div>
+                </div>
+                <hr />
+                <mi-layout-horizontal class="pad_1">
+                    <div class="width_50 pad_1">
+                        <mi-button class="blanco" :on-click="cerrar_dialogo_de_eliminar_instancia">{{ $t("Cancelar") }}</mi-button>
+                    </div>
+                    <div class="width_50 pad_1 pad_left_0">
+                        <mi-button class="rojo" :on-click="eliminar_instancia">{{ $t("Eliminar") }}</mi-button>
+                    </div>
+                </mi-layout-horizontal>
+            </mi-window>
+        </dialog>
+    </mi-responsive-page>
+</div>

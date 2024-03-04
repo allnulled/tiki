@@ -34,6 +34,8 @@ const main = async function() {
 
     // COMPONENTES GRÁFICOS:
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_button/mi_button.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_breadcrumb/mi_breadcrumb.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_breadcrumb2/mi_breadcrumb2.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_checkbox/mi_checkbox.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_datepicker/mi_datepicker.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_fieldset/mi_fieldset.js");
@@ -45,12 +47,32 @@ const main = async function() {
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_options/mi_options.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_paragraph/mi_paragraph.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_radiobuttons/mi_radiobuttons.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_responsive_page/mi_responsive_page.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_subtitle/mi_subtitle.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_tabs/mi_tabs.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_textarea/mi_textarea.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_timepicker/mi_timepicker.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_title/mi_title.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_window/mi_window.js");
     await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_view_according_to_screen/mi_view_according_to_screen.js");
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_boolean_checkbox/mi_input_boolean_checkbox.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_boolean_combobox/mi_input_boolean_combobox.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_color/mi_input_color.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_date/mi_input_date.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_date_hour/mi_input_date_hour.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_email/mi_input_email.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_float/mi_input_float.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_hour/mi_input_hour.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_integer/mi_input_integer.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_long_text/mi_input_long_text.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_option_combobox/mi_input_option_combobox.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_option_selector/mi_input_option_selector.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_options_checkbox/mi_input_options_checkbox.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_password/mi_input_password.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/mi_input_text/mi_input_text.js");
+    await Sistema_de_modulos.cargar_script("lib/vue2/componentes/reusables/vuejs_calendario/vuejs_calendario.js");
+    //////////////////////////////////////////////////////////////////////////////////////////////////
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/app/app.js");
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_inicio/pagina_de_inicio.js");
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_registrarse/pagina_de_registrarse.js");
@@ -58,7 +80,14 @@ const main = async function() {
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_bienvenida/pagina_de_bienvenida.js");
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_base_de_datos/pagina_de_base_de_datos.js");
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_tabla_de_base_de_datos/pagina_de_tabla_de_base_de_datos.js");
+    await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_crear_registro_de_base_de_datos/pagina_de_crear_registro_de_base_de_datos.js");
+    await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_actualizar_registro_de_base_de_datos/pagina_de_actualizar_registro_de_base_de_datos.js");
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/pagina_de_configuraciones/pagina_de_configuraciones.js");
+    await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/paginador/paginador.js");
+    await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/configurador_de_consulta/configurador_de_consulta.js");
+    await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/formulario_de_tabla/formulario_de_tabla.js");
+    await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/explorador_de_tabla/explorador_de_tabla.js");
+    await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/mi_input_reference/mi_input_reference.js");
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/mis_dialogos/mis_dialogos.js");
     await Sistema_de_modulos.cargar_script_como_texto("lib/vue2/componentes/no_reusables/mis_errores/mis_errores.js");
 
@@ -69,6 +98,8 @@ const main = async function() {
     await Sistema_de_modulos.cargar_estilo_dinamico("lib/aplicacion/estilos/aplicacion.jcss");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_button/mi_button.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_checkbox/mi_checkbox.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_breadcrumb/mi_breadcrumb.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_breadcrumb2/mi_breadcrumb2.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_datepicker/mi_datepicker.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_fieldset/mi_fieldset.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_hourpicker/mi_hourpicker.css");
@@ -79,18 +110,46 @@ const main = async function() {
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_options/mi_options.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_paragraph/mi_paragraph.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_radiobuttons/mi_radiobuttons.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_responsive_page/mi_responsive_page.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_subtitle/mi_subtitle.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_tabs/mi_tabs.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_textarea/mi_textarea.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_timepicker/mi_timepicker.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_title/mi_title.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_window/mi_window.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_view_according_to_screen/mi_view_according_to_screen.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/app/app.css");
+    ////////////////////////////////////////////////////////////////////////////////////////
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_boolean_checkbox/mi_input_boolean_checkbox.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_boolean_combobox/mi_input_boolean_combobox.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_color/mi_input_color.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_date/mi_input_date.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_date_hour/mi_input_date_hour.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_email/mi_input_email.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_float/mi_input_float.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_hour/mi_input_hour.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_integer/mi_input_integer.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_long_text/mi_input_long_text.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_option_combobox/mi_input_option_combobox.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_option_selector/mi_input_option_selector.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_options_checkbox/mi_input_options_checkbox.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_password/mi_input_password.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/mi_input_text/mi_input_text.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/reusables/vuejs_calendario/vuejs_calendario.css");
+    ////////////////////////////////////////////////////////////////////////////////////////
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/pagina_de_inicio/pagina_de_inicio.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/pagina_de_bienvenida/pagina_de_bienvenida.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/pagina_de_base_de_datos/pagina_de_base_de_datos.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/pagina_de_tabla_de_base_de_datos/pagina_de_tabla_de_base_de_datos.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/pagina_de_crear_registro_de_base_de_datos/pagina_de_crear_registro_de_base_de_datos.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/pagina_de_actualizar_registro_de_base_de_datos/pagina_de_actualizar_registro_de_base_de_datos.css");
     await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/pagina_de_configuraciones/pagina_de_configuraciones.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/formulario_de_tabla/formulario_de_tabla.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/explorador_de_tabla/explorador_de_tabla.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/paginador/paginador.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/mi_input_reference/mi_input_reference.css");
+    await Sistema_de_modulos.cargar_estilo("lib/vue2/componentes/no_reusables/configurador_de_consulta/configurador_de_consulta.css");
+    await Sistema_de_modulos.cargar_estilo_dinamico("lib/aplicacion/estilos/theme.jcss");
     
     // MÓDULOS DE INICIO:
     await Sistema_de_modulos.cargar_script("lib/traducciones/traducciones.js");
@@ -99,8 +158,8 @@ const main = async function() {
     
     // ARRANQUE:
     await Sistema_de_modulos.cargar_modulo("lib/sistema_de_dialogos");
-    await Sistema_de_modulos.cargar_modulo("lib/sistema_de_refresco_automatico");
     await Sistema_de_modulos.cargar_modulo("lib/aplicacion");
+    await Sistema_de_modulos.cargar_modulo("lib/sistema_de_refresco_automatico");
 
   } catch (error) {
     console.log(error);

@@ -146,7 +146,7 @@ describe('Tiki tests', function () {
     it('controlador «insertar»', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "insertar",
-        tabla: "notas",
+        tabla: "nota",
         valores: {
           contenido: "Nota de ejemplo para el test"
         }
@@ -156,7 +156,7 @@ describe('Tiki tests', function () {
     it('controlador «seleccionar» / test 1', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "notas"
+        tabla: "nota"
       });
       comprobar_error_de_peticion(response);
       options.id_nota =  response.filter(nota => nota.contenido === "Nota de ejemplo para el test")[0].id;
@@ -164,7 +164,7 @@ describe('Tiki tests', function () {
     it('controlador «actualizar»', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "actualizar",
-        tabla: "notas",
+        tabla: "nota",
         id: options.id_nota,
         valores: {
           contenido: "Otro contenido de ejemplo para el test"
@@ -175,14 +175,14 @@ describe('Tiki tests', function () {
     it('controlador «seleccionar» / test 2', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "notas"
+        tabla: "nota"
       });
       comprobar_error_de_peticion(response);
     });
     it('controlador «eliminar»', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "eliminar",
-        tabla: "notas",
+        tabla: "nota",
         id: options.id_nota
       });
       comprobar_error_de_peticion(response);
@@ -190,7 +190,7 @@ describe('Tiki tests', function () {
     it('controlador «seleccionar» / test 3', async function () {
       const response = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "notas"
+        tabla: "nota"
       });
       comprobar_error_de_peticion(response);
     });
@@ -200,14 +200,14 @@ describe('Tiki tests', function () {
         const dato = datos[index];
         const response = await peticion("http://127.0.0.1/tiki/index.php", {
           operacion: "insertar",
-          tabla: "notas",
+          tabla: "nota",
           valores: dato
         });
         comprobar_error_de_peticion(response);
       }
       const response_1 = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "notas",
+        tabla: "nota",
         donde: [["contenido", "=", "2"]]
       });
       comprobar_error_de_peticion(response_1);
@@ -215,17 +215,16 @@ describe('Tiki tests', function () {
       // assert.ok(response_1.length === 1);
       const response_2 = await peticion("http://127.0.0.1/tiki/index.php", {
         operacion: "seleccionar",
-        tabla: "notas",
+        tabla: "nota",
         pagina: "0"
       });
-      console.log(response_2);
       assert.ok(Array.isArray(response_2));
       const ids = response_2.map(it => it.id);
       for(let index=0; index<ids.length; index++) {
         const id = ids[index];
         const response = await peticion("http://127.0.0.1/tiki/index.php", {
           operacion: "eliminar",
-          tabla: "notas",
+          tabla: "nota",
           id
         });
         comprobar_error_de_peticion(response);

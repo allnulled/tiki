@@ -1,10 +1,20 @@
 <div>
     <mi-title class="text_align_center">{{ $t("Bienvenido a Tiki") }}</mi-title style="text-align:center;">
-    <div class="pad_2 text_align_center">
-        <div class="display_inline_block width_100" style="max-width: 400px; min-width: 200px; ">
-            <mi-button class="blanco" :on-click="ir_a_base_de_datos">{{ $t("Ir a base de datos") }}</mi-button>
-            <mi-button class="blanco" :on-click="ir_a_configuraciones">{{ $t("Ir configuraciones") }}</mi-button>
-            <mi-button class="blanco" :on-click="salir_de_aplicacion">{{ $t("Salir de la aplicación") }}</mi-button>
-        </div>
-    </div>
+    <mi-responsive-page>
+        <mi-breadcrumb class="text_align_left">
+            <a class="link_actual" href="javascript:void(0)">{{ $t("Inicio") }}</a>
+        </mi-breadcrumb>
+        <mi-view-according-to-screen :screens="['mobile']">
+            <mi-button class="blanco" :on-click="ir_a_base_de_datos" id="boton_de_ir_a_base_de_datos">{{ $t("Ir a base de datos") }}</mi-button>
+            <mi-button class="blanco" :on-click="ir_a_configuraciones" id="boton_de_configuraciones">{{ $t("Ir configuraciones") }}</mi-button>
+            <mi-button class="blanco" :on-click="salir_de_aplicacion" id="boton_de_salir_de_la_aplicacion">{{ $t("Salir de la aplicación") }}</mi-button>
+        </mi-view-according-to-screen>
+        <mi-view-according-to-screen :screens="['tablet','desktop','television']">
+            <mi-button class="blanco display_inline_block width_auto" :on-click="ir_a_base_de_datos" id="boton_de_ir_a_base_de_datos">
+            {{ $t("Ir a base de datos") }}</mi-button><mi-button class="blanco display_inline_block width_auto" :on-click="ir_a_configuraciones" id="boton_de_configuraciones">
+            {{ $t("Ir configuraciones") }}</mi-button><mi-button class="blanco display_inline_block width_auto" :on-click="salir_de_aplicacion" id="boton_de_salir_de_la_aplicacion">
+            {{ $t("Salir de la aplicación") }}</mi-button>
+        </mi-view-according-to-screen>
+
+    </mi-responsive-page>
 </div>

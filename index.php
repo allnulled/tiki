@@ -134,22 +134,21 @@ try {
                 if (!isset($usuario_formateado)) {
                     $usuario_formateado = array(
                         "id" => $fila["usuario.id"],
-                        "nombre" => $fila["usuario.nombre"],
                         "email" => $fila["usuario.email"],
-                        "grupos" => [],
-                        "permisos" => []
+                        "grupo" => [],
+                        "permiso" => []
                     );
                 }
                 $id_grupo = $fila["grupo.id"];
                 $id_permiso = $fila["permiso.id"];
                 if (isset($id_grupo)) {
-                    $usuario_formateado["grupos"][$id_grupo] = array(
+                    $usuario_formateado["grupo"][$id_grupo] = array(
                         "id" => $id_grupo,
                         "nombre" => $fila["grupo.nombre"]
                     );
                 }
                 if (isset($id_permiso)) {
-                    $usuario_formateado["permisos"][$id_permiso] = array(
+                    $usuario_formateado["permiso"][$id_permiso] = array(
                         "id" => $id_permiso,
                         "nombre" => $fila["permiso.nombre"]
                     );
@@ -166,7 +165,6 @@ try {
             $query = <<<SQL
             SELECT
                 u.id AS 'usuario.id',
-                u.nombre AS 'usuario.nombre',
                 u.email AS 'usuario.email',
                 g.id AS 'grupo.id',
                 g.nombre AS 'grupo.nombre',
@@ -174,17 +172,17 @@ try {
                 p.nombre AS 'permiso.nombre',
                 gp.id AS 'grupo_y_permiso.id'
             FROM
-                sesiones s
+                sesion s
             JOIN
-                usuarios u ON s.id_usuario = u.id
+                usuario u ON s.id_usuario = u.id
             LEFT JOIN
-                usuarios_y_grupos ug ON u.id = ug.id_usuario
+                usuario_y_grupo ug ON u.id = ug.id_usuario
             LEFT JOIN
-                grupos g ON ug.id_grupo = g.id
+                grupo g ON ug.id_grupo = g.id
             LEFT JOIN
-                grupos_y_permisos gp ON g.id = gp.id_grupo
+                grupo_y_permiso gp ON g.id = gp.id_grupo
             LEFT JOIN
-                permisos p ON u.id = p.id
+                permiso p ON u.id = p.id
             WHERE s.token = '$token_sanitized';
         SQL;
             $result = $conn->query($query);
@@ -222,7 +220,7 @@ try {
             FROM
                 information_schema.TABLES t
             LEFT JOIN
-                information_schema.COLUMNS c ON t.TABLE_NAME = c.TABLE_NAME
+                information_schema.COLUMNS c ON t.TABLE_NAME = c.TABLE_NAME AND c.TABLE_SCHEMA = t.TABLE_SCHEMA
             LEFT JOIN
                 information_schema.KEY_COLUMN_USAGE kcu ON t.TABLE_NAME = kcu.TABLE_NAME AND c.COLUMN_NAME = kcu.COLUMN_NAME
             WHERE
@@ -251,13 +249,57 @@ try {
                 if ($row["constraint_name"] !== null) {
                     $foreign_key = array(
                         "name" => $row["constraint_name"],
+                        "source_table" => $row["table_name"],
+                        "source_column" => $row["column_name"],
                         "referenced_table" => $row["referenced_table_name"],
                         "referenced_column" => $row["referenced_column_name"]
                     );
                     $databaseInfo[$table]["foreign_keys"][] = $foreign_key;
+                    for($index_column = 0; $index_column < count($databaseInfo[$table]["columns"]); $index_column++) {
+                        $nombre_1 = $databaseInfo[$table]["columns"][$index_column]["name"];
+                        $nombre_2 = $row["column_name"];
+                        $nombre_3 = $table;
+                        $nombre_4 = $row["table_name"];
+                        if(($nombre_2 !== "id") && ($nombre_3 === $nombre_4) && ($nombre_1 === $nombre_2)) {
+                            $databaseInfo[$table]["columns"][$index_column] = array_merge($databaseInfo[$table]["columns"][$index_column], [
+                                "is_foreign_key_of" => $foreign_key
+                            ]);
+                        }
+                    }
                 }
             }
+            $this->expandir_esquema($databaseInfo);
             return $databaseInfo;
+        }
+
+        function expandir_esquema(&$databaseInfo) {
+            global $_METAESQUEMA;
+            foreach($_METAESQUEMA as $key => $expansion) {
+                $reference = explode(".", $key);
+                $table_name = $reference[0];
+                $column_name = $reference[1];
+                $all_columns = $databaseInfo[$table_name]["columns"];
+                for($index = 0; $index < count($all_columns); $index++) {
+                    $column = $all_columns[$index];
+                    if($column["name"] === $column_name) {
+                        $databaseInfo[$table_name]["columns"][$index] = array_merge($column, $expansion);
+                    }
+                }
+            }
+        }
+
+        function es_columna_privada($tabla, $columna, $esquema = null) {
+            if(is_null($esquema)) {
+                $esquema = $this->obtener_esquema();
+            }
+            try {
+                $coincidencias = array_filter($esquema[$tabla]["columns"], function($item) use ($columna) {
+                    return ($item["name"] === $columna) && array_key_exists("is_private_column", $item) && ($item["is_private_column"] === true);
+                });
+                return count($coincidencias) === 1;
+            } catch (Exception $ex) {
+                return false;
+            }
         }
 
         function esquema()
@@ -269,16 +311,15 @@ try {
             echo $this->formatear_a_json($databaseInfo);
         }
 
-        function seleccionar($tabla, $donde = [], $orden = [["id", "ASC"]], $pagina = 1, $items = 20)
+        function seleccionar($tabla, $donde = [], $orden = [["id", "ASC"]], $pagina = 1, $items = 20, $busqueda = "")
         {
             global $_CONFIGURACIONES;
-            global $_POLITICA_DE_SEGURIDAD_ESTRICTA;
-            $is_safe_column = function($column) use ($_POLITICA_DE_SEGURIDAD_ESTRICTA) {
-                return in_array($column, $_POLITICA_DE_SEGURIDAD_ESTRICTA["safe_columns"]);
-            };
             $this->loguear_evento("[actor=seleccionar]", "trace.txt");
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.seleccionar:antes", $_NODATA);
             // Normalizar parametros:
+            if(strlen($tabla) === 0) {
+                throw new Exception("El parámetro «tabla» debe ser un string para poder «seleccionar»");
+            }
             if(is_string($donde)) {
                 $donde = json_decode($donde, true);
             }
@@ -303,6 +344,19 @@ try {
             if(!is_int($items)) {
                 throw new Exception("El parámetro «items» debe ser un integer para poder «seleccionar»");
             }
+            // Filtramos los campos seleccionables solamente (que no tengan is_private_column => true):
+            $esquema = $this->obtener_esquema();
+            if(!array_key_exists($tabla, $esquema)) {
+                throw new Exception("No existe la tabla especificada «" . $tabla . "»");
+            }
+            $campos_array = [];
+            foreach($esquema[$tabla]["columns"] as $column_index => $column) {
+                $is_private_column = (array_key_exists("is_private_column", $column)) && ($column["is_private_column"] === true);
+                if(!$is_private_column) {
+                    $campos_array[] = $column["name"];
+                }
+            }
+            $campos = implode(", ", $campos_array);
             // Seguimos con la query:
             $conn = $this->conectar_bd();
             $tabla = $conn->real_escape_string($tabla);
@@ -312,7 +366,7 @@ try {
                 $clausulasWhere = [];
                 foreach ($donde as $index_filtro => $regla_de_filtro) {
                     $columna = $regla_de_filtro[0] ?? null;
-                    if($is_safe_column($tabla . "." . $columna)) {
+                    if($this->es_columna_privada($tabla, $columna)) {
                         throw new Exception("La columna «{$tabla}.{$columna}» no puede usarse para filtrar");
                     }
                     $operador = $regla_de_filtro[1] ?? null;
@@ -342,12 +396,29 @@ try {
             } else {
                 $particula_where = "";
             }
+            if(!empty($busqueda)) {
+                if(empty($particula_where)) {
+                    $particula_where = " WHERE ";
+                }
+                $columnas_de_tabla = array_map(function($column) {
+                    return $column["name"];
+                }, $esquema[$tabla]["columns"]);
+                $clausulas_search = [];
+                foreach($columnas_de_tabla as $columna_de_tabla) {
+                    if(!$this->es_columna_privada($tabla, $columna_de_tabla)) {
+                        $busqueda_sanitizada = $conn->real_escape_string($busqueda);
+                        $clausula_search = "{$columna_de_tabla} LIKE '%" . $busqueda_sanitizada . "%'";
+                        array_push($clausulas_search, $clausula_search);
+                    }
+                }
+                $particula_where .= "(" . implode(" OR ", $clausulas_search) . ")";
+            }
             $particula_order_by = "";
             if (!empty($orden)) {
                 $clausulasOrder = [];
                 foreach ($orden as $regla_de_orden) {
                     $columna = $regla_de_orden[0];
-                    if($is_safe_column($tabla . "." . $columna)) {
+                    if($this->es_columna_privada($tabla, $columna)) {
                         throw new Exception("La columna «{$tabla}.{$columna}» no puede usarse para ordenar");
                     }
                     $columna = $conn->real_escape_string($columna);
@@ -367,7 +438,7 @@ try {
             $offset = ($pagina > 0 ? $pagina - 1 : $pagina) * $items;
             $items = $conn->real_escape_string($items);
             $offset = $conn->real_escape_string($offset);
-            $query = "SELECT * FROM {$tabla} {$particula_where} {$particula_order_by} LIMIT {$items} OFFSET {$offset}";
+            $query = "SELECT {$campos} FROM {$tabla} {$particula_where} {$particula_order_by} LIMIT {$items} OFFSET {$offset}";
             $this->loguear_evento($query, "queries.txt");
             $result = $conn->query($query);
             $data = $result->fetch_all(MYSQLI_ASSOC);
@@ -379,16 +450,30 @@ try {
         function insertar($tabla, $valores)
         {
             $this->loguear_evento("[actor=insertar]", "trace.txt");
+            if(!is_array($valores)) {
+                throw new Exception("El parámetro «valores» debe ser un array en operación «insert»");
+            }
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.insertar:antes", $_NODATA);
             $conn = $this->conectar_bd();
-            $valores_sanitized = array_map(array($conn, 'real_escape_string'), $valores);
+            unset($valores["id"]);
+            $framework = $this;
+            $valores = array_filter($valores, function($key) use ($framework, $tabla) {
+                return !$framework->es_columna_privada($tabla, $key);
+            }, ARRAY_FILTER_USE_KEY);
+            $valores_sanitized = array_map(function($item) use ($conn) {
+                return $conn->real_escape_string($item);
+            }, $valores);
             $columnas = implode(',', array_keys($valores_sanitized));
             $valores_str = "'" . implode("','", $valores_sanitized) . "'";
             $query = "INSERT INTO $tabla ($columnas) VALUES ($valores_str)";
             $this->loguear_evento($query, "queries.txt");
-            $conn->query($query);
+            $resultado = $conn->query($query);
+            $ultimo_id = $conn->insert_id;
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.insertar:despues", $_NODATA);
-            echo $this->formatear_a_json(array("mensaje" => "Registro insertado con éxito."));
+            echo $this->formatear_a_json(array(
+                "mensaje" => "Registro insertado con éxito.",
+                "nuevo_id" => $ultimo_id
+            ));
         }
 
         function actualizar($tabla, $valores, $id)
@@ -396,7 +481,14 @@ try {
             $this->loguear_evento("[actor=actualizar]", "trace.txt");
             $this->gestor_de_hooks->ejecutar("tiki.procedimiento.actualizar:antes", $_NODATA);
             $conn = $this->conectar_bd();
-            $valores_sanitized = array_map(array($conn, 'real_escape_string'), $valores);
+            unset($valores["id"]);
+            $framework = $this;
+            $valores = array_filter($valores, function($key) use ($framework, $tabla) {
+                return !$framework->es_columna_privada($tabla, $key);
+            }, ARRAY_FILTER_USE_KEY);
+            $valores_sanitized = array_map(function($item) use ($conn) {
+                return $conn->real_escape_string($item);
+            }, $valores);
             $set_clause = '';
             foreach ($valores_sanitized as $columna => $valor) {
                 $set_clause .= "$columna = '$valor',";
@@ -421,13 +513,13 @@ try {
             echo $this->formatear_a_json(array("mensaje" => "Registro eliminado con éxito."));
         }
 
-        function registrar_usuario($nombre, $email, $contrasenya)
+        function registrar_usuario($email, $contrasenya)
         {
             global $_CONFIGURACIONES;
             $this->loguear_evento("[actor=registrar_usuario]", "trace.txt");
             $conn = $this->conectar_bd();
             // Verificar si el usuario ya está registrado
-            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+            $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -439,8 +531,8 @@ try {
             $hash_password = password_hash($contrasenya, PASSWORD_DEFAULT);
             $token = $this->generar_token();
             $token2 = $this->generar_token();
-            $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, contrasenya, confirmado, token_confirmacion, token_recuperacion) VALUES (?, ?, ?, 0, ?, ?)");
-            $stmt->bind_param("sssss", $nombre, $email, $hash_password, $token, $token2);
+            $stmt = $conn->prepare("INSERT INTO usuario (email, contrasenya, confirmado, token_confirmacion, token_recuperacion) VALUES (?, ?, 0, ?, ?)");
+            $stmt->bind_param("ssss", $email, $hash_password, $token, $token2);
             $stmt->execute();
             // Enviar correo de confirmación
             $mensaje = "¡Gracias por registrarte! Para confirmar tu cuenta, haz clic en el siguiente enlace:\n\n";
@@ -465,13 +557,13 @@ try {
             $this->loguear_evento("[actor=confirmar_cuenta]", "trace.txt");
             $conn = $this->conectar_bd();
             // Verificar si el token coincide con el almacenado en la base de datos
-            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ? AND token_confirmacion = ? AND confirmado = 0");
+            $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = ? AND token_confirmacion = ? AND confirmado = 0");
             $stmt->bind_param("ss", $email, $token);
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 // Confirmar la cuenta
-                $stmt = $conn->prepare("UPDATE usuarios SET confirmado = 1 WHERE email = ?");
+                $stmt = $conn->prepare("UPDATE usuario SET confirmado = 1 WHERE email = ?");
                 $stmt->bind_param("s", $email);
                 $stmt->execute();
                 echo $this->formatear_a_json(array("mensaje" => "Tu cuenta ha sido confirmada con éxito."));
@@ -485,7 +577,7 @@ try {
             $this->loguear_evento("[actor=iniciar_sesion]", "trace.txt");
             $conn = $this->conectar_bd();
             // Verificar credenciales
-            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ? and confirmado = 1");
+            $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = ? and confirmado = 1");
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -493,7 +585,7 @@ try {
                 $usuario = $result->fetch_assoc();
                 // Verificar contraseña y cuenta confirmada
                 if (password_verify($contrasenya, $usuario['contrasenya'])) {
-                    $stmt2 = $conn->prepare('SELECT * FROM sesiones WHERE id_usuario = ?');
+                    $stmt2 = $conn->prepare('SELECT * FROM sesion WHERE id_usuario = ?');
                     $stmt2->bind_param('s', $usuario["id"]);
                     $stmt2->execute();
                     $result2 = $stmt2->get_result();
@@ -505,7 +597,7 @@ try {
                     } else {
                         // O crear una sesión nueva
                         $token = $this->generar_token(20);
-                        $stmt3 = $conn->prepare('INSERT INTO sesiones (id_usuario, token) VALUES (?, ?)');
+                        $stmt3 = $conn->prepare('INSERT INTO sesion (id_usuario, token) VALUES (?, ?)');
                         $stmt3->bind_param('ss', $usuario["id"], $token);
                         $stmt3->execute();
                     }
@@ -528,7 +620,7 @@ try {
             $this->loguear_evento("[actor=iniciar_sesion]", "trace.txt");
             $conn = $this->conectar_bd();
             // Cerrar sesión eliminando la información del usuario actual
-            $stmt = $conn->prepare("DELETE FROM sesiones WHERE token = ?");
+            $stmt = $conn->prepare("DELETE FROM sesion WHERE token = ?");
             $stmt->bind_param("s", $token);
             $stmt->execute();
             echo $this->formatear_a_json(array("mensaje" => "Sesión cerrada."));
@@ -540,7 +632,7 @@ try {
             global $_CONFIGURACIONES;
             $conn = $this->conectar_bd();
             // Verificar si el usuario existe y está confirmado
-            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ? AND confirmado = 1");
+            $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = ? AND confirmado = 1");
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -548,7 +640,7 @@ try {
                 // Generar token de recuperación
                 $token = $this->generar_token();
                 // Almacenar el token en la base de datos
-                $stmt = $conn->prepare("UPDATE usuarios SET token_recuperacion = ? WHERE email = ?");
+                $stmt = $conn->prepare("UPDATE usuario SET token_recuperacion = ? WHERE email = ?");
                 $stmt->bind_param("ss", $token, $email);
                 $stmt->execute();
                 // Enviar correo de recuperación
@@ -575,14 +667,14 @@ try {
             $this->loguear_evento("[actor=recuperar_credenciales]", "trace.txt");
             $conn = $this->conectar_bd();
             // Verificar si el token de recuperación coincide con el almacenado en la base de datos
-            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ? AND token_recuperacion = ? AND confirmado = 1");
+            $stmt = $conn->prepare("SELECT * FROM usuario WHERE email = ? AND token_recuperacion = ? AND confirmado = 1");
             $stmt->bind_param("ss", $email, $token);
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 // Cambiar la contraseña del usuario
                 $hash_password = password_hash($nueva_password, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("UPDATE usuarios SET contrasenya = ?, token_recuperacion = NULL WHERE email = ?");
+                $stmt = $conn->prepare("UPDATE usuario SET contrasenya = ?, token_recuperacion = NULL WHERE email = ?");
                 $stmt->bind_param("ss", $hash_password, $email);
                 $stmt->execute();
                 echo $this->formatear_a_json(array("mensaje" => "Contraseña recuperada con éxito."));
@@ -596,16 +688,16 @@ try {
             $this->loguear_evento("[actor=baja_del_sistema]", "trace.txt");
             $conn = $this->conectar_bd();
             // Verificar si el usuario existe y está confirmado
-            $stmt = $conn->prepare("SELECT * FROM usuarios WHERE id = ?");
+            $stmt = $conn->prepare("SELECT * FROM usuario WHERE id = ?");
             $stmt->bind_param("s", $id_usuario);
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
                 // Eliminar al usuario de sus relaciones y de su tabla en la base de datos
                 $stmts = array(
-                    "0" => "DELETE FROM usuarios_y_grupos WHERE id_usuario = ?",
-                    "1" => "DELETE FROM sesiones WHERE id_usuario = ?",
-                    "2" => "DELETE FROM usuarios WHERE id = ?"
+                    "0" => "DELETE FROM usuario_y_grupo WHERE id_usuario = ?",
+                    "1" => "DELETE FROM sesion WHERE id_usuario = ?",
+                    "2" => "DELETE FROM usuario WHERE id = ?"
                 );
                 foreach ($stmts as $stmt_index => $stmt) {
                     $stmt = $conn->prepare($stmt);
@@ -673,16 +765,16 @@ try {
     if (in_array($operacion, $operaciones_crud)) {
         // Validar tabla
         $tablas_validas = array(
-            'usuarios',
-            'grupos',
-            'permisos',
-            'usuarios_y_grupos',
-            'grupos_y_permisos',
-            'sesiones',
-            'notas'
+            'usuario',
+            'grupo',
+            'permiso',
+            'usuario_y_grupo',
+            'grupo_y_permiso',
+            'sesion',
+            'nota'
         );
         if (!in_array($tabla, $tablas_validas)) {
-            $tiki->gestionar_error("Tabla no válida.");
+            //$tiki->gestionar_error("Tabla no válida.");
         }
     }
 
@@ -725,7 +817,8 @@ try {
             $orden = $tiki->parametros["orden"] ?? [];
             $pagina = $tiki->parametros["pagina"] ?? 1;
             $items = $tiki->parametros["items"] ?? 20;
-            $tiki->seleccionar($tabla, $donde, $orden, $pagina, $items);
+            $busqueda = $tiki->parametros["busqueda"] ?? "";
+            $tiki->seleccionar($tabla, $donde, $orden, $pagina, $items, $busqueda);
             break;
         case 'insertar':
             $valores_array = is_string($valores) ? json_decode($valores, true) : $valores;
@@ -739,7 +832,7 @@ try {
             $tiki->eliminar($tabla, $id);
             break;
         case 'registrar_usuario':
-            $tiki->registrar_usuario($tiki->parametros["nombre"] ?? '', $tiki->parametros["email"] ?? '', $tiki->parametros["contrasenya"] ?? '');
+            $tiki->registrar_usuario($tiki->parametros["email"] ?? '', $tiki->parametros["contrasenya"] ?? '');
             break;
         case 'confirmar_cuenta':
             $tiki->confirmar_cuenta($tiki->parametros["email"] ?? '', $tiki->parametros["token_confirmacion"] ?? '');

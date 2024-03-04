@@ -1,10 +1,14 @@
 .mi-input {
     padding: 15px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
     font-size: 11px !important;
     font-family: 9pt Segoe UI,SegoeUI,Noto Sans,sans-serif !important;
     border: 1px solid #333 !important;
     border-radius: 0pt !important;
     box-sizing: border-box;
+    
+    max-height: 23px;
     background: linear-gradient(180deg,
     #FCFCFC 0%,
      #ACACAC 40%,

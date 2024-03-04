@@ -2,6 +2,6 @@
 Vue.component('mi-label', {
   props: [],
   template: `
-    <label><slot /></label>
+    <span class="mi-label"><slot /></span>
   `
 });

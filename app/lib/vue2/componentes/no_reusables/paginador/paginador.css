@@ -1,0 +1,4 @@
+.paginador {}
+.paginador .boton_de_paginador > .mi-button {
+    min-width: 40px;
+}

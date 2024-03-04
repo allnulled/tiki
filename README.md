@@ -7,7 +7,13 @@ El proyecto «tiki» es 1 script que sirve para exponer una base de datos MySQL 
 - [Índice](#índice)
 - [Capacidades](#capacidades)
 - [Instalación](#instalación)
+  - [Paso 1. Sincroniza la base de datos con las tablas mínimas de `tiki`](#paso-1-sincroniza-la-base-de-datos-con-las-tablas-mínimas-de-tiki)
+  - [Paso 2. Descarga `tiki` en cualquier directorio de tu servidor PHP estático](#paso-2-descarga-tiki-en-cualquier-directorio-de-tu-servidor-php-estático)
+  - [Paso 3. Enciende y visita el servidor con un navegador](#paso-3-enciende-y-visita-el-servidor-con-un-navegador)
+  - [Paso 4. Identifícate en la interfaz gráfica](#paso-4-identifícate-en-la-interfaz-gráfica)
 - [Uso](#uso)
+- [Uso del cliente con interfaz gráfica](#uso-del-cliente-con-interfaz-gráfica)
+- [Uso de la API REST directo](#uso-de-la-api-rest-directo)
 - [Ventajas](#ventajas)
 - [Desventajas](#desventajas)
 - [Elaboración](#elaboración)
@@ -17,6 +23,7 @@ El proyecto «tiki» es 1 script que sirve para exponer una base de datos MySQL 
 - [Interfaz](#interfaz)
 - [Seguridad](#seguridad)
 - [Conclusión](#conclusión)
+- [Actualmente](#actualmente)
 
 ## Capacidades
 
@@ -38,14 +45,42 @@ Las operaciones que se permiten en el sistema son:
 
 Ahora explicaré por pasos cómo instalar esta herramienta para poder explotarla.
 
- - **Paso 1.** Descargar el proyecto de [https://github.com/allnulled/tiki](https://github.com/allnulled/tiki).
- - **Paso 2.** Colocar el proyecto en un servidor para PHP estático, en la carpeta que quieras.
+### Paso 1. Sincroniza la base de datos con las tablas mínimas de `tiki`
+
+### Paso 2. Descarga `tiki` en cualquier directorio de tu servidor PHP estático
+
+### Paso 3. Enciende y visita el servidor con un navegador
+
+### Paso 4. Identifícate en la interfaz gráfica
+
+ - **Paso 1.** Comprobar que la base de datos tenga las tablas mínimas para que el sistema de autorización funcione. Tienes el script que las resetea en [test/autentificacion.sql](./test/autentificacion.sql). Úsalo en tu base de datos MySQL para crear las tablas mínimas para pasar los tests.
+ - **Paso 2.** Descargar el proyecto de [https://github.com/allnulled/tiki](https://github.com/allnulled/tiki).
+ - **Paso 3.** Colocar el proyecto en un servidor para PHP estático, en la carpeta que quieras.
     - Si no tienes uno, mírate [XAMPP](https://www.apachefriends.org/es/download.html) que es lo más fácil de instalar.
- - **Paso 3.** Encender el servidor si no lo está ya, e ir a la URL correspondiente del «index.php». 
+ - **Paso 4.** Encender el servidor si no lo está ya, e ir a la URL correspondiente del «index.php».
     - *Cuidado: puede que si no pones el «index.php» explícito en la URL haga cosas raras, a mí me ha pasado.*
- - **Paso 4.** Ya está, ya tienes la API funcionando. Puedes ir con tu navegador a la URL del «index.php».
+ - **Paso 5.** Ya está, ya tienes la API funcionando. Puedes ir con tu navegador a la URL del «app/index.html». Ahí tienes la interfaz gráfica del cliente HTML por defecto de `tiki`.
 
 ## Uso
+
+Tienes 2 formas principales de usar `tiki`:
+
+ - Vía el cliente con interfaz gráfica en HTML/Vue.js (v2).
+ - Vía la REST API en PHP.
+
+Como usuario no desarrollador, te interesa la interfaz gráfica en HTML.
+
+Como usuario desarrollador puede interesarte la REST API.
+
+A continuación se explican ambos.
+
+## Uso del cliente con interfaz gráfica
+
+Si eres un usuario no desarrollador, te interesa acceder directamente al cliente con interfaz gráfica. Para ello, abre el navegador en la URL correspondiente al directorio donde hayas instalado `tiki`, y la ruta agregada: «app/index.html». A partir de ahí, puedes identificarte mediante el login de la aplicación, y ya acceder a la base de datos plenamente.
+
+## Uso de la API REST directo
+
+Por otro lado, si eres usuario sí desarrollador, te interesa saber cómo funciona la API.
 
 Una vez instalado `tiki`, ya puedes empezar a hacer peticiones HTTP a la API REST. Pero no vale hacer las peticiones de cualquier manera, sino que hay un protocolo de entendimiento entre las peticiones y el servidor. Esto es lo que se explica a continuación.
 
@@ -228,17 +263,44 @@ Esto no es una vulnerabilidad, pero es crucial en el funcionamiento de la aplica
 
 **Medida 4. Cuidado con compartir el fichero de configuraciones.**
 
-En el fichero de `configuraciones.php` aparecen las credenciales de la base de datos. Estos datos le dan acceso a cualquiera a un sistema completo de datos del cual la aplicación depende plenamente. Son considerados de los datos más sensibles de la aplicación. Pero de alguna tienen que subirse al servidor para funcionar.
+En el fichero de `configuraciones.php` aparecen las credenciales de la base de datos. Estos datos le dan acceso a cualquiera a un sistema completo de datos del cual la aplicación depende plenamente. Son considerados de los datos más sensibles de la aplicación. Pero de alguna manera tienen que subirse al servidor para funcionar.
 
-La cuestión no es que no se pueda subir al servidor. Pero sí hay que estar 100% seguro de que este fichero no se sube a ningún repositorio público, dado que luego estaríamos exponiendo nuestras credenciales de la base de datos, a cualquiera. Podemos ser objeto de Google Hacking, y si somos víctimas de un acceso ilícito a la base de datos, podemos sufrir cualquier alteración de los datos.
+La cuestión no es que no se pueda subir al servidor. Pero sí que hay que estar 100% seguro de que este fichero no se sube a ningún repositorio público, dado que luego estaríamos exponiendo nuestras credenciales de la base de datos, a cualquiera. Podemos ser objeto de Google Hacking, y si somos víctimas de un acceso ilícito a la base de datos, podemos sufrir cualquier alteración de los datos.
 
-**Medida 5. Aplica políticas de seguridad estricta en las tablas o columnas más sensibles.**
+Definitivamente, cuidado con mostrar este fichero a terceras personas.
 
-En el fichero `configuraciones.php` tienes la variable global `$_POLITICA_DE_SEGURIDAD_ESTRICTA`. Dentro de ella, tienes la propiedad `safe_columns`. Utiliza esta propiedad para prohibir tajantemente el acceso a esas columnas más sensibles de la aplicación que no quieres que ningún usuario acceda o modifique.
+**Medida 5. Aplica 'is_private_column' en las columnas que no quieres que sean públicas.**
 
-Concretamente, lo que permite esta propiedad es que no permitamos el uso de filtros contra esa columna. Y esto sí puede suponer una vulnerabilidad que podrían explotar los usuarios de la API REST. Me explico.
+En el fichero `configuraciones.php` tienes la variable global `$_METAESQUEMA`. En ella, puedes especificar `"{tabla}.{columna}" => $metaatributos`. Pues como meta-atributo, puedes añadir el campo `"is_private_column"`. Esto hará que (1) no se pueda ver, (2) no se pueda filtrar, (3) no se pueda insertar y (4) no se pueda actualizar dicho campo, bajo ningún concepto, utilizando la API normal.
 
-La API REST automáticamente permite filtrar por todas las tablas y campos. Por defecto. Y esto no es interesante para muchas de clas columnas que aparecen en la base de datos. Por ejemplo, el campo de contrasenya del usuario, o sus tokens de recuperación y confirmación, o el token de la sesión. Estos campos no deben estar accesibles para ser filtrados. Es decir, hay una capa de seguridad en el plugin `BasicAuth` que oculta el campo de contrasenya, de los tokens del usuario, y del token de sesión. Pero esto solo está **ocultando** el campo al devolver la información: no está **prohibiendo su uso para filtrar en la API REST**. ¿Qué quiere decir? Que si `usuarios.contrasenya` no estuviera en `$_POLITICA_DE_SEGURIDAD_ESTRICTA["safe_columns"]`, un usuario podría ir a la API REST y probar de encontrar la contraseña de otro usuario, mediante el uso del parámetro `donde` en la operación de `seleccionar`. Y esto no debe poder pasar. Por eso, se lista este campo en `safe_columns`: para que no se pueda filtrar.
+Si luego quieres, puedes habilitar nuevos servicios para interactuar con este campo.
+
+Como alternativa final, puedes hacer un hook desde algún plugin para personalizar la lógica sensible con este campo en cada uno de los puntos del ciclo de vida de la aplicación REST API que precises.
+
+**Medida 6. Securiza las operaciones de la API REST mediante hooks de plugins.**
+
+En última instancia, y cuando requieras alguna lógica de negocio algo más compleja que, simplemente, no se pueda filtrar por cierta columna, entonces debes usar los hooks de los plugins.
+
+Para hacerte una idea de cómo se pueden utilizar los hooks, tienes el ejemplo de [plugins/activos/BasicAuth/load.php](./plugins/activos/BasicAuth/load.php). Ahí puedes ver un ejemplo. Para lo demás, tendrás que explorar mínimamente `index.php` y localizar dónde se llama al hook que te interesa y cómo. Y de ahí, usarlo de la forma más conveniente para cada caso.
+
+Esta es la última fase de seguridad de `tiki`. Con ella, se espera poder cubrir todas las casuísticas de lógica de negocio puramente, reduciendo drásticamente el tiempo de desarrollo, puesto que automáticamente tenemos una REST API, y solo tenemos que procurar que cumpla con los requisitos de **seguridad lógica** o **lógica de seguridad** se deseen.
+
+En este sentido, pensar que tienes todos los datos al descubierto y que tienes que ir caso por caso descubriendo la lógica que quieres entramar para hacerla segura, no es quizás el procedimiento mental más conveniente para abarcar esta parte de la ingeniería. Sí del desarrollo, ojo. Pero no de la ingeniería, probablemente.
+
+Esta es otra mejor forma de abarcarlo, en mi opinión. Consiste en preguntarse 4 cosas:
+
+  - ¿Qué datos interesa que toque cada rol?
+  - ¿De qué forma interesa que toque esos datos (visible/no visible, alterable/no alterable)?
+  - ¿Qué datos NO interesa que toque cada rol?
+  - ¿De qué forma interesa que toque esos datos (visible/no visible, alterable/no alterable)?
+
+Básicamente, cualquier usuario, desde dentro de la aplicación, ya puede alterar ciertos datos y realizar operaciones repetitivas, o costosas, aunque `tiki` intenta ser lo más económico posible en eso, y no se enzarza en multitud de consultas por servicio, sino que se ciñe a interactuar con la base de datos de una forma bastante limitada, pero rápida.
+
+Lo que debe de intentarse es minimizar el fallo. Es decir: si este rol no está concebido para este tipo de dato, directamente no puede interceder. A no ser, de la administración global, como medida de delegación de control al usuario no (necesariamente) desarrollador. Es decir: que al menos 1 usuario sí pueda salvar las operaciones que se queden bloqueadas en un estado erróneo.
+
+Teniendo esto en cuenta, ya creas roles y permisos en función de datos concretos. Y vas asignando esos roles a cada usuario, para que pueda participar en las distintas operaciones contra los distintos datos, siempre en función de roles que puede acumular.
+
+
 
 ## Conclusión
 
@@ -251,3 +313,11 @@ Este proyecto está pensado para minimizar y acelerar al máximo el proceso de d
 Ya está, se considera un proyecto clave en el transcurso de mi carrera como software developer, porque este simple "script" ofrece un boilerplate muy avanzado para cualquier desarrollo back-end, desde escuelas online, blogs, lo que sea. No facilita el front-end, pero minimiza al máximo el back-end.
 
 Es todo. No sé, no hay más que decir. Bueno, que este tipo de herramienta es lo que te habrían explicado y dado en un principio y desde un principio, si estuviéramos en un sitio limpio. Pero aquí huele mal.
+
+
+
+
+
+
+## Actualmente
+

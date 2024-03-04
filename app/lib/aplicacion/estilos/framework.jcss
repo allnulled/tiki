@@ -4,12 +4,14 @@
 .text_align_center { text-align: center; }
 
 .display_block { display: block;}
+.display_none { display: none;}
 .display_inline_block { display: inline-block;}
 .display_table { display: table;}
 .display_table_cell { display: table-cell;}
 
+.width_1 { width: 1%;}
 .width_100 { width: 100%;}
-.width_auto { width: auto; }
+.width_auto { width: auto !important; }
 
 .pad_1 { padding: 4px; }
 .pad_top_1 { padding-top: 4px; }
@@ -35,6 +37,11 @@
 
 .background_color_transparent { background-color: transparent; }
 .color_white { color: white; }
+.color_black { color: black; }
 
 .position_relative { position: relative; }
 .position_absolute { position: absolute; }
+
+.vertical_align_top { vertical-align: top; }
+.vertical_align_middle { vertical-align: middle; }
+.vertical_align_bottom { vertical-align: bottom; }

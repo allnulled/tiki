@@ -1,0 +1,108 @@
+<div class="formulario_de_tabla">
+    <form class="formulario_de_registro">
+        <template v-for="columna, columna_index in columnas_de_tabla" v-if="columna.is_private_column !== true">
+            <div class="campo_de_formulario_de_registro" v-bind:key="'formulario-de-registro-columna-' + columna_index">
+                <mi-label>
+                    <mi-layout-horizontal>
+                        <div class="width_100">Campo {{ columna_index + 1 }}: {{ $t(utilidades_de_texto.humanizar_texto(columna.name)) }}</div>
+                        <div class="width_1">
+                            <mi-button class="blanco mini" :on-click="(evento) => alternar_descriptor(columna.name, evento)">{{ $t("Descripción") }}</mi-button>
+                        </div>
+                    </mi-layout-horizontal>
+                    <div class="panel_de_atributos_de_columna" v-if="esta_mostrando_descriptores[columna.name]">
+                        <template v-for="prop, prop_index in columna">
+                            <span class="display_inline_block">
+                                <span class="atributo_de_columna display_table" v-if="(prop_index !== 'name') && prop" v-bind:key="'formulario-de-registro-columna-' + columna_index + '-propiedad-' + prop_index">
+                                    <span class="parte_1 display_table_cell">{{ prop_index }}:</span><span class="parte_2 display_table_cell">{{ prop }}</span>
+                                </span>
+                            </span>
+                        </template>
+                        <span class="display_inline_block">
+                            <span class="atributo_de_columna display_table">
+                                <span class="parte_1 display_table_cell">{{ $t("Column") }}:</span><span class="parte_3 display_table_cell">{{ columna.name }}</span>
+                            </span>
+                        </span>
+                    </div>
+                </mi-label>
+                <template v-if="false">
+                    Esto nunca se imprimirá.
+                </template>
+                <template v-else-if="typeof columna.is_foreign_key_of === 'object'">
+                    <mi-input-reference class="width_100" :root="root" :schema="root.esquema" :initial-value="0" :on-change="v => dato[columna.name]" :table="columna.is_foreign_key_of.referenced_table" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'texto'">
+                    <mi-input-text class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'texto largo'">
+                    <mi-input-long-text class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'email'">
+                    <mi-input-email class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'número entero'">
+                    <mi-input-integer class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'número flotante'">
+                    <mi-input-float class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'contraseña'">
+                    <mi-input-password class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'fecha'">
+                    <mi-input-date class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'hora'">
+                    <mi-input-hour class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'fecha y hora'">
+                    <mi-input-date-hour class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'booleano combobox'">
+                    <mi-input-boolean-combobox class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" :options="columna.has_options" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'booleano checkbox'">
+                    <mi-input-boolean-checkbox class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" :options="columna.has_options" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'opción selector'">
+                    <mi-input-option-selector class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" :options="columna.has_options" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'opción combobox'">
+                    <mi-input-option-combobox class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" :options="columna.has_options" />
+                </template>
+                <template v-else-if="columna.is_form_type === 'opciones checkbox'">
+                    <mi-input-options-checkbox class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" :options="columna.has_options" />
+                </template>
+                <template v-else-if="columna.type === 'int'">
+                    <mi-input-integer class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'float'">
+                    <mi-input-float class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'decimal'">
+                    <mi-input-float class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'varchar'">
+                    <mi-input-text class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'text'">
+                    <mi-input-long-text class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'datetime'">
+                    <mi-input-date-hour class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'time'">
+                    <mi-input-hour class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'timestamp'">
+                    <mi-input-date-hour class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else-if="columna.type === 'date'">
+                    <mi-input-date class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+                <template v-else="">
+                    <mi-input class="width_100" :initial-value="dato[columna.name]" :on-change="v => dato[columna.name] = v" />
+                </template>
+            </div>
+        </template>
+    </form>
+</div>

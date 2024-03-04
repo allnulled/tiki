@@ -22,13 +22,13 @@
                         <div class="pad_1">
                             <div class="width_100">
                                 <div class="width_100 pad_1">
-                                    <mi-button class="verde" :on-click="identificarse">{{ $t("Entrar") }}</mi-button>
+                                    <mi-button class="verde" :on-click="identificarse" id="boton_de_entrar">{{ $t("Entrar") }}</mi-button>
                                 </div>
                                 <div class="pad_1">
-                                    <mi-button class="naranja" :on-click="registrarse">{{ $t("Registrarse") }}</mi-button>
+                                    <mi-button class="naranja" :on-click="registrarse" id="boton_de_registrarse">{{ $t("Registrarse") }}</mi-button>
                                 </div>
                                 <div class="pad_1">
-                                    <mi-button class="naranja" :on-click="olvido_contrasenya">{{ $t("Olvidó contraseña") }}</mi-button>
+                                    <mi-button class="naranja" :on-click="olvido_contrasenya" id="boton_de_olvido_contrasenya">{{ $t("Olvidó contraseña") }}</mi-button>
                                 </div>
                             </div>
                         </div>
